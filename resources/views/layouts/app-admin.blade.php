@@ -12,7 +12,9 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    @include('layouts.partials.navbar')
+    @include('layouts.partials.navbar-admin')
+
+    @include('layouts.partials.sidebar-admin')
 
     <div id="app">
         <main class="py-4">
@@ -20,6 +22,6 @@
         </main>
     </div>
 
-    @include('layouts.partials.footer')
+    @include('layouts.partials.footer-admin')
 </body>
 </html>
