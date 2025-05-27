@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Level;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -24,21 +25,60 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->name(),
+            'username' => $this->faker->unique()->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => bcrypt('password'),
+            'bio' => $this->faker->paragraph(),
+            'profile_pic' => $this->faker->imageUrl(200, 200, 'people'),
+            'level_id' => Level::factory(),
+            'experience' => $this->faker->numberBetween(0, 1000),
             'remember_token' => Str::random(10),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
+
+    public function admin()
+{
+    return $this->afterCreating(function (User $user) {
+        $user->assignRole('admin');
+    });
+}
+
+public function curator()
+{
+    return $this->afterCreating(function (User $user) {
+        $user->assignRole('curator');
+    });
+}
+
+public function moderator()
+{
+    return $this->afterCreating(function (User $user) {
+        $user->assignRole('moderator');
+    });
+}
+
+public function student()
+{
+    return $this->afterCreating(function (User $user) {
+        $user->assignRole('student');
+    });
+}
+
+public function withExperience(int $experience)
+{
+    return $this->state(function (array $attributes) use ($experience) {
+        return [
+            'experience' => $experience,
+        ];
+    });
+}
 }

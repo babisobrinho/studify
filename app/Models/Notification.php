@@ -26,9 +26,8 @@ class Notification extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function related()
+    public function notifiable()
     {
-        // Relacionamento polimórfico
         return $this->morphTo();
     }
 

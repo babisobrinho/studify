@@ -2,15 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Comment;
-use App\Models\Track;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class ReportFactory extends Factory
+class RoleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,49 +18,43 @@ class ReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'track_id' => null,
-            'comment_id' => null,
-            'reason' => $this->faker->randomElement(['spam', 'inappropriate', 'wrong_info', 'other']),
-            'description' => $this->faker->paragraph(),
-            'status' => $this->faker->randomElement(['pending', 'reviewed', 'resolved']),
+            'name' => $this->faker->unique()->word,
+            'guard_name' => 'web',
         ];
     }
 
-    public function forTrack()
+    public function admin()
     {
         return $this->state(function (array $attributes) {
             return [
-                'track_id' => Track::factory(),
-                'comment_id' => null,
+                'name' => 'admin',
             ];
         });
     }
 
-    public function forComment()
+    public function curator()
     {
         return $this->state(function (array $attributes) {
             return [
-                'comment_id' => Comment::factory(),
-                'track_id' => null,
+                'name' => 'curator',
             ];
         });
     }
 
-    public function resolved()
+    public function moderator()
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 'resolved',
+                'name' => 'moderator',
             ];
         });
     }
 
-    public function reviewed()
+    public function student()
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 'reviewed',
+                'name' => 'student',
             ];
         });
     }

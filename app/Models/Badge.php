@@ -16,10 +16,11 @@ class Badge extends Model
         'criteria',
     ];
 
+    // Obtém todos os usuários que possuem este badge
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_badges')
-            ->withTimestamps()
-            ->withPivot('earned_at');
+            ->withPivot('earned_at')
+            ->withTimestamps();
     }
 }

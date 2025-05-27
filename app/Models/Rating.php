@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Like extends Model
+class Rating extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
 
     protected $fillable = [
         'user_id',
         'track_id',
+        'rating',
+        'review'
     ];
 
     // Relations

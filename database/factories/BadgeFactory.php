@@ -17,12 +17,10 @@ class BadgeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence(2),
-            'description' => $this->faker->sentence(8),
-            'icon' => 'badges/'.$this->faker->word.'.png',
-            'criteria' => $this->faker->sentence(5),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'name' => $this->faker->unique()->word(),
+            'description' => $this->faker->sentence(),
+            'icon' => $this->faker->imageUrl(64, 64),
+            'criteria' => $this->faker->paragraph(),
         ];
     }
 }

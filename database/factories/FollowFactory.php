@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +18,8 @@ class FollowFactory extends Factory
     public function definition(): array
     {
         return [
-            'follower_id' => \App\Models\User::factory(),
-            'followed_id' => \App\Models\User::factory(),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'follower_id' => User::factory(),
+            'followed_id' => User::factory(),
         ];
     }
 }

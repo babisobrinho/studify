@@ -9,6 +9,8 @@ class UserStep extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'user_steps';
 
     protected $fillable = [
@@ -22,6 +24,7 @@ class UserStep extends Model
         'completed_at' => 'datetime',
     ];
 
+    // Relations
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -30,5 +33,11 @@ class UserStep extends Model
     public function step()
     {
         return $this->belongsTo(Step::class);
+    }
+
+    // Auxiliar
+    public function markAsComplete()
+    {
+        $this->update(['completed_at' => now()]);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Track;
+use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,48 +19,49 @@ class NotificationFactory extends Factory
      */
     public function definition(): array
     {
-        $types = ['new_follower', 'track_update', 'comment', 'like', 'badge'];
-        $type = $this->faker->randomElement($types);
-
+        $notifiableType = $this->faker->randomElement(['track', 'comment', 'user']);
+        
         return [
-            'user_id' => \App\Models\User::factory(),
-            'type' => $type,
-            'related_id' => $this->getRelatedId($type),
-            'message' => $this->getMessage($type),
-            'is_read' => $this->faker->boolean,
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'user_id' => User::factory(),
+            'notifiable_type' => $notifiableType,
+            'notifiable_id' => $this->getNotifiableId($notifiableType),
+            'message' => $this->faker->sentence(),
+            'is_read' => $this->faker->boolean(),
         ];
     }
 
-    private function getRelatedId($type)
+    protected function getNotifiableId(string $type)
     {
-        switch ($type) {
-            case 'new_follower':
-                return \App\Models\User::factory();
-            case 'track_update':
-                return \App\Models\Track::factory();
-            case 'comment':
-                return \App\Models\Comment::factory();
-            case 'like':
-                return \App\Models\Like::factory();
-            case 'badge':
-                return \App\Models\Badge::factory();
-            default:
-                return null;
-        }
+        return match($type) {
+            'track' => Track::factory(),
+            'comment' => Comment::factory(),
+            'user' => User::factory(),
+            default => throw new \InvalidArgumentException("Tipo notificável inválido")
+        };
     }
 
-    private function getMessage($type)
+    // Métodos específicos para cada tipo
+    public function forTrack()
     {
-        $messages = [
-            'new_follower' => 'começou a seguir você',
-            'track_update' => 'atualizou a trilha que você está seguindo',
-            'comment' => 'comentou na sua trilha',
-            'like' => 'curtiu sua trilha',
-            'badge' => 'Você desbloqueou um novo badge',
-        ];
+        return $this->state([
+            'notifiable_type' => 'track',
+            'notifiable_id' => Track::factory(),
+        ]);
+    }
 
-        return $messages[$type];
+    public function forComment()
+    {
+        return $this->state([
+            'notifiable_type' => 'comment',
+            'notifiable_id' => Comment::factory(),
+        ]);
+    }
+
+    public function forUser()
+    {
+        return $this->state([
+            'notifiable_type' => 'user',
+            'notifiable_id' => User::factory(),
+        ]);
     }
 }

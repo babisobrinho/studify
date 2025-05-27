@@ -16,7 +16,7 @@ class Comment extends Model
         'content',
     ];
 
-    // Relacionamentos
+    // Relations
     public function user()
     {
         return $this->belongsTo(User::class);

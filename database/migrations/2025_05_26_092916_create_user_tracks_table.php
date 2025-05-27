@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('last_accessed')->nullable();
             $table->timestamp('started_at')->useCurrent();
             $table->timestamp('completed_at')->nullable();
+            
             $table->primary(['user_id', 'track_id']);
         });
     }

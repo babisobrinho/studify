@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DifficultyEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,8 +20,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_official')->default(false);
             $table->boolean('is_public')->default(true);
-            $table->enum('difficulty', ['beginner', 'intermediate', 'advanced'])->default('beginner');
+            $table->enum('difficulty', DifficultyEnum::values())->default(DifficultyEnum::BEGINNER->value);
             $table->string('cover_image')->nullable();
+            $table->integer('contributors_count')->default(0);
             $table->timestamps();
         });
     }

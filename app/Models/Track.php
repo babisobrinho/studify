@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DifficultyEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,14 +19,16 @@ class Track extends Model
         'is_public',
         'difficulty',
         'cover_image',
+        'contributors_count'
     ];
 
     protected $casts = [
         'is_official' => 'boolean',
         'is_public' => 'boolean',
+        'difficulty' => DifficultyEnum::class,
     ];
 
-    // Relacionamentos
+    // Relations
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -41,15 +44,14 @@ class Track extends Model
         return $this->hasMany(Step::class)->orderBy('position');
     }
 
-    public function users()
+    public function userTracks()
     {
-        return $this->belongsToMany(User::class, 'user_tracks')
-            ->withPivot('progress', 'last_accessed', 'started_at', 'completed_at');
+        return $this->hasMany(UserTrack::class);
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
 
     public function likes()
@@ -62,7 +64,23 @@ class Track extends Model
         return $this->hasMany(Report::class);
     }
 
-    // Scopes
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    // Helpers
+    public function getAverageRatingAttribute()
+    {
+        return $this->ratings()->avg('rating');
+    }
+
+    // Métodos auxiliares
     public function scopeOfficial($query)
     {
         return $query->where('is_official', true);
@@ -73,10 +91,12 @@ class Track extends Model
         return $query->where('is_public', true);
     }
 
-    // Métodos auxiliares
-    public function getProgressForUser($userId)
+    public function getDifficultyLabelAttribute()
     {
-        $userTrack = $this->users()->where('user_id', $userId)->first();
-        return $userTrack ? $userTrack->pivot->progress : 0;
+        return match($this->difficulty) {
+            DifficultyEnum::BEGINNER => 'Iniciante',
+            DifficultyEnum::INTERMEDIATE => 'Intermediário',
+            DifficultyEnum::ADVANCED => 'Avançado',
+        };
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ContentTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,12 +23,18 @@ class Step extends Model
 
     protected $casts = [
         'external_resource' => 'boolean',
+        'content_type' => ContentTypeEnum::class,
     ];
 
-    // Relacionamentos
+    // Relations
     public function track()
     {
         return $this->belongsTo(Track::class);
+    }
+
+    public function userSteps()
+    {
+        return $this->hasMany(UserStep::class);
     }
 
     public function users()

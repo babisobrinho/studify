@@ -5,15 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Like extends Model
+class Certificate extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
 
     protected $fillable = [
         'user_id',
         'track_id',
+        'certificate_url',
+        'issued_at'
+    ];
+
+    protected $casts = [
+        'issued_at' => 'datetime',
     ];
 
     // Relations

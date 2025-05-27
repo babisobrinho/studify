@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Badge;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,6 +12,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class UserBadgeFactory extends Factory
 {
     /**
+     * O nome do model correspondente
+     *
+     * @var string
+     */
+    protected $model = \App\Models\UserBadge::class;
+
+    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
@@ -17,9 +26,9 @@ class UserBadgeFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'badge_id' => \App\Models\Badge::factory(),
-            'earned_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'user_id' => User::factory(),
+            'badge_id' => Badge::factory(),
+            'earned_at' => $this->faker->dateTimeThisYear(),
         ];
     }
 }

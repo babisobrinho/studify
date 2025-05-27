@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Track;
+use App\Models\User;
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,12 +20,17 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'track_id' => \App\Models\Track::factory(),
-            'parent_id' => $this->faker->optional(0.2)->randomElement(\App\Models\Comment::pluck('id')->toArray()),
-            'content' => $this->faker->paragraph,
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'user_id' => User::factory(),
+            'track_id' => Track::factory(),
+            'parent_id' => null, // Será sobrescrito quando necessário
+            'content' => $this->faker->paragraph(),
         ];
+    }
+
+    public function reply(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'parent_id' => Comment::factory(),
+        ]);
     }
 }

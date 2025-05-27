@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('user_steps', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('step_id')->constrained()->onDelete('cascade');
-            $table->timestamp('completed_at')->useCurrent();
+            $table->timestamp('completed_at')->nullable();
             $table->text('notes')->nullable();
+            
             $table->primary(['user_id', 'step_id']);
         });
     }

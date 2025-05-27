@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\ContentTypeEnum;
+use App\Models\Track;
+use App\Models\Step;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,28 +19,17 @@ class StepFactory extends Factory
      */
     public function definition(): array
     {
-        $contentTypes = ['video', 'article', 'podcast', 'course', 'exercise'];
-        $type = $this->faker->randomElement($contentTypes);
-
-        $urls = [
-            'video' => 'https://www.youtube.com/watch?v='.$this->faker->regexify('[A-Za-z0-9]{11}'),
-            'article' => 'https://medium.com/'.$this->faker->slug,
-            'podcast' => 'https://open.spotify.com/episode/'.$this->faker->regexify('[A-Za-z0-9]{22}'),
-            'course' => 'https://www.udemy.com/course/'.$this->faker->slug,
-            'exercise' => 'https://exercism.org/tracks/'.$this->faker->word,
-        ];
+        static $position = 1;
 
         return [
-            'track_id' => \App\Models\Track::factory(),
-            'position' => $this->faker->numberBetween(1, 10),
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->paragraph,
-            'content_type' => $type,
-            'content_url' => $urls[$type],
-            'external_resource' => $this->faker->boolean(90),
-            'estimated_time' => $this->faker->numberBetween(5, 120),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'track_id' => Track::factory(),
+            'position' => $position++,
+            'title' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
+            'content_type' => $this->faker->randomElement(ContentTypeEnum::cases()),
+            'content_url' => $this->faker->url(),
+            'external_resource' => $this->faker->boolean(),
+            'estimated_time' => $this->faker->numberBetween(5, 120), // minutos
         ];
     }
 }

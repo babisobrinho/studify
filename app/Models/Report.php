@@ -22,7 +22,7 @@ class Report extends Model
         'status' => 'string',
     ];
 
-    // Relacionamentos
+    // Relations
     public function user()
     {
         return $this->belongsTo(User::class);

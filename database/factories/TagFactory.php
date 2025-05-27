@@ -17,9 +17,7 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'name' => $this->faker->unique()->word(),
         ];
     }
 }

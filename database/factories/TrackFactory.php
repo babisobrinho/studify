@@ -2,6 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\DifficultyEnum;
+use App\Models\User;
+use App\Models\Track;
+use App\Models\Step;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TrackFactory extends Factory
 {
+    protected $model = \App\Models\Track::class;
+
     /**
      * Define the model's default state.
      *
@@ -17,16 +23,15 @@ class TrackFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => \App\Models\User::factory(),
-            'title' => $this->faker->sentence(4),
-            'slug' => $this->faker->slug,
-            'description' => $this->faker->paragraphs(3, true),
-            'is_official' => $this->faker->boolean(30),
+            'user_id' => User::factory(),
+            'title' => $this->faker->sentence(),
+            'slug' => $this->faker->slug(),
+            'description' => $this->faker->paragraph(),
+            'is_official' => $this->faker->boolean(),
             'is_public' => $this->faker->boolean(80),
-            'difficulty' => $this->faker->randomElement(['beginner', 'intermediate', 'advanced']),
+            'difficulty' => $this->faker->randomElement(DifficultyEnum::cases())->value,
             'cover_image' => $this->faker->imageUrl(800, 400, 'technics'),
-            'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'contributors_count' => $this->faker->numberBetween(0, 10),
         ];
     }
 
@@ -35,8 +40,25 @@ class TrackFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'is_official' => true,
-                'user_id' => \App\Models\User::where('role', 'curator')->first()->id ?? \App\Models\User::factory()->curator(),
+                'user_id' => User::role('curator')->first()->id ?? 
+                            User::factory()->create()->assignRole('curator'),
             ];
+        });
+    }
+
+    public function difficulty(DifficultyEnum $difficulty)
+    {
+        return $this->state(function (array $attributes) use ($difficulty) {
+            return [
+                'difficulty' => $difficulty->value,
+            ];
+        });
+    }
+
+    public function withSteps($count = 5)
+    {
+        return $this->afterCreating(function (Track $track) use ($count) {
+            Step::factory()->count($count)->for($track)->create();
         });
     }
 }

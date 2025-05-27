@@ -7,9 +7,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Certificate>
  */
-class LikeFactory extends Factory
+class CertificateFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -21,7 +21,8 @@ class LikeFactory extends Factory
         return [
             'user_id' => User::factory(),
             'track_id' => Track::factory(),
-            'created_at' => $this->faker->dateTimeThisYear(),
+            'certificate_url' => $this->faker->url(),
+            'issued_at' => $this->faker->dateTimeThisYear(),
         ];
     }
 }

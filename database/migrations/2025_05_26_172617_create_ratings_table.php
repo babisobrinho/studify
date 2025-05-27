@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('likes', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('track_id')->constrained()->onDelete('cascade');
-            $table->timestamp('created_at')->useCurrent();
-            
+        Schema::create('ratings', function (Blueprint $table) {
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('track_id')->constrained();
+            $table->tinyInteger('rating')->unsigned(); // 1-5 estrelas
+            $table->text('review')->nullable();
             $table->primary(['user_id', 'track_id']);
+            $table->timestamps();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('likes');
+        Schema::dropIfExists('ratings');
     }
 };

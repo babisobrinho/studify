@@ -7,9 +7,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Rating>
  */
-class LikeFactory extends Factory
+class RatingFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -21,7 +21,8 @@ class LikeFactory extends Factory
         return [
             'user_id' => User::factory(),
             'track_id' => Track::factory(),
-            'created_at' => $this->faker->dateTimeThisYear(),
+            'rating' => $this->faker->numberBetween(1, 5),
+            'review' => $this->faker->optional(0.7)->paragraph(), // 70% chance de ter review
         ];
     }
 }
