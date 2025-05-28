@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light">
 <head>
     <title>{{ config('app.name', 'Studify') }}</title>
     <meta charset="utf-8">
@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="app">
-        <main class="py-4">
+        <main class="">
             @yield('content')
         </main>
     </div>
