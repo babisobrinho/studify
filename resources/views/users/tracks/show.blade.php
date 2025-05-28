@@ -11,8 +11,8 @@
                     </div>
                 </div>
                 <div class="col-md-9 position-relative p-4">
-                    <h1 class="h3 fw-bold text-primary mb-1">Desenvolvimento Front-end</h1>
-                    <div class="text-secondary mb-1">Nome dos professores, Nome dos professores</div>
+                    <h1 class="h3 fw-bold text-primary mb-1">{{ $track->title }}</h1>
+                    <div class="text-secondary mb-1">{{ $track->description }}</div>
                     <div class="text-muted small mb-3">+5k views • +10k alunos</div>
 
                     <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
@@ -23,6 +23,7 @@
                     </div>
 
                     <div class="d-flex flex-wrap gap-2 mb-3">
+                        <!-- foreach das tags table track_tags -->
                         <span class="badge bg-light text-primary rounded-pill px-3 py-1">HTML</span>
                         <span class="badge bg-light text-primary rounded-pill px-3 py-1">CSS</span>
                         <span class="badge bg-light text-primary rounded-pill px-3 py-1">JavaScript</span>
@@ -38,6 +39,7 @@
 
         <!-- Playlist Content -->
         <div class="bg-white rounded shadow-sm p-3 mb-4">
+            <!-- foreach dos steps table steps -->
             @foreach([
                 ['num' => 1, 'img' => 'HTML', 'title' => 'Introdução ao HTML', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
                 ['num' => 2, 'img' => 'CSS', 'title' => 'Estilização com CSS', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
@@ -75,6 +77,7 @@
         <div class="bg-white rounded shadow-sm p-4 mb-4">
             <h2 class="h5 fw-bold text-primary mb-4">Linha de Frente</h2>
             <div class="d-flex gap-3 overflow-auto pb-2">
+                <!-- autor + foreach dos contribuidores - acho que não existe table de contribuidores ainda -->
                 @foreach([
                     ['img' => 'https://via.placeholder.com/80x80', 'badge' => 'plus', 'verified' => false, 'name' => 'Nome Apelido'],
                     ['img' => 'https://via.placeholder.com/80x80', 'badge' => 'check', 'verified' => true, 'name' => 'Nome Apelido'],
@@ -98,6 +101,7 @@
         <div class="bg-white rounded shadow-sm p-4 mb-4 position-relative">
             <h2 class="h5 fw-bold text-primary mb-4">Recomendações para você</h2>
             <div class="d-flex gap-3 overflow-auto pb-2">
+                <!-- foreach com tracks da mesma categoria e que ainda não tenham sido concluídas pelo utilizador autenticado -->
                 @foreach([
                     ['img' => 'UX/UI', 'title' => 'Design UX/UI para Desenvolvedores', 'creator' => 'por Designer Pro'],
                     ['img' => 'TypeScript', 'title' => 'TypeScript para Aplicações Robustas', 'creator' => 'por Desenvolvedor TS'],
@@ -120,7 +124,7 @@
             </button>
 
             <div class="d-flex justify-content-between mt-4">
-                <a href="{{route('tracks.index')}}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ route('tracks.index', ['username' => $user->username]) }}" class="btn btn-outline-secondary">Cancelar</a>
                 <a href="{{route('tracks.edit')}}" class="btn btn-outline-secondary">Editar</a>
             </div>
         </div>

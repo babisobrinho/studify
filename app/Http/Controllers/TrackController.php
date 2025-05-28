@@ -11,14 +11,13 @@ class TrackController extends Controller
     /**
      * Display a listing of the resource.
      */
-    //public function index(string $username)
-    public function index()
+    public function index(string $username)
     {
-       /** $userId = User::where('name', $username)->firstOrFail();
-        $tracks = Track::where('user_id',$userId)->firstOrFail();
-        return view('users.tracks.index', compact('tracks'));
-        */
-        return view('tracks.index');
+        
+        $user = User::where('username', $username)->firstOrFail();
+        $tracks = Track::where('user_id', $user->id)->get();
+        
+        return view('users.tracks.index', compact('user', 'tracks'));
     }
 
     /**
@@ -26,7 +25,7 @@ class TrackController extends Controller
      */
     public function create()
     {
-        return view('tracks.create');
+        return view('users.tracks.create');
     }
 
     /**
@@ -40,9 +39,12 @@ class TrackController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(string $username, string $id)
     {
-        return view('tracks.show');
+        $user = User::where('username', $username)->firstOrFail();
+        $track = Track::where('id', $id)->firstOrFail();
+
+        return view('users.tracks.show', compact('user', 'track'));
     }
 
     /**
@@ -50,7 +52,7 @@ class TrackController extends Controller
      */
     public function edit()
     {
-        return view('tracks.edit');
+        return view('users.tracks.edit');
     }
 
     /**
