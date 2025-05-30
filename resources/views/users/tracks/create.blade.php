@@ -7,7 +7,10 @@
         <p class="text-muted">Organize seu aprendizado com um plano estruturado</p>
     </div>
 
-    <form id="createPlanForm">
+    <form id="createPlanForm" action="{{ route('tracks.store', ['username' => $user->username]) }}"
+          method="POST" enctype="multipart/form-data">
+        @csrf
+
         <!-- Informações Básicas -->
         <div class="card mb-4">
             <div class="card-body">
@@ -21,6 +24,7 @@
                             type="text"
                             class="form-control"
                             id="planTitle"
+                            name="title"
                             placeholder="Ex: Guia de Desenvolvimento Front-End"
                             required
                         />
@@ -33,6 +37,7 @@
                     <textarea
                         class="form-control"
                         id="planDescription"
+                        name="description"
                         placeholder="Descreva o objetivo e conteúdo do plano..."
                         rows="4"
                         required
@@ -41,51 +46,53 @@
 
                 <div class="mb-3">
                     <label for="planVisibility" class="form-label">Visibilidade</label>
-                    <select class="form-select" id="planVisibility">
-                        <option value="public">Público - Visível para todos</option>
-                        <option value="private">Privado - Apenas você pode ver</option>
+                    <select class="form-select" id="planVisibility" name="is_public">
+                        <option value="1">Público - Visível para todos</option>
+                        <option value="0">Privado - Apenas você pode ver</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <!-- Categoria e Tags -->
+        <!-- Dificuldade e Tecnologias -->
         <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title h5 mb-3">Categoria e Tecnologias</h2>
+                <h2 class="card-title h5 mb-3">Dificuldade e Tecnologias</h2>
 
-                <!-- Categoria do Plano -->
+                <!-- Dificuldade do Plano -->
                 <div class="mb-4">
-                    <label for="planCategory" class="form-label">Categoria do Plano de Estudo</label>
-                    <p class="text-muted small mb-2">Selecione a categoria principal deste plano de estudos</p>
-                    <select class="form-select" id="planCategory" required>
-                        <option value="" selected disabled>Selecione uma categoria...</option>
-                        <option value="frontend">Front-end</option>
-                        <option value="backend">Back-end</option>
-                        <option value="fullstack">Full Stack</option>
-                        <option value="mobile">Desenvolvimento Mobile</option>
-                        <option value="database">Banco de Dados</option>
-                        <option value="devops">DevOps</option>
-                        <option value="ai">Inteligência Artificial</option>
-                        <option value="datascience">Ciência de Dados</option>
-                        <option value="gamedev">Desenvolvimento de Jogos</option>
-                        <option value="security">Segurança da Informação</option>
-                        <option value="cloud">Computação em Nuvem</option>
-                        <option value="other">Outra</option>
+                    <label for="planDifficulty" class="form-label">Nível de Dificuldade</label>
+                    <p class="text-muted small mb-2">Selecione o nível de dificuldade deste plano de estudos</p>
+                    <select class="form-select" id="planDifficulty" name="difficulty" required>
+                        <option value="beginner" selected>Iniciante</option>
+                        <option value="intermediate">Intermediário</option>
+                        <option value="advanced">Avançado</option>
                     </select>
                 </div>
 
-                <!-- Tags de Tecnologias -->
+                <!-- Tecnologias Utilizadas (Checkboxes) -->
                 <div class="mb-3">
-                    <label for="techTags" class="form-label">Tecnologias Utilizadas</label>
-                    <p class="text-muted small mb-2">Adicione as tecnologias, linguagens e ferramentas abordadas neste plano</p>
-                    <input
-                        type="text"
-                        id="techTags"
-                        class="form-control"
-                        placeholder="Digite e pressione Enter para adicionar tecnologias (ex: PHP, Laravel, MySQL...)"
-                    >
-                    <div class="form-text">Pressione Enter após cada tecnologia ou separe-as com vírgulas</div>
+                    <label class="form-label">Tecnologias Utilizadas</label>
+                    <p class="text-muted small mb-2">Selecione as tecnologias, linguagens e ferramentas abordadas neste plano</p>
+
+                    <div class="row">
+                        @if(isset($availableTags) && count($availableTags) > 0)
+                            @foreach($availableTags->chunk(5) as $chunk)
+                                <div class="col-md-4">
+                                    @foreach($chunk as $tag)
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" name="technologies[]" value="{{ $tag->id }}" id="tech_{{ $tag->id }}">
+                                            <label class="form-check-label" for="tech_{{ $tag->id }}">{{ $tag->name }}</label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="col-12">
+                                <p class="text-muted">Nenhuma tecnologia disponível.</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,47 +104,223 @@
                 <p class="text-muted mb-3">
                     Adicione cursos, artigos, vídeos ou outros recursos ao seu plano de estudos
                 </p>
-
+                <!--o campo para upload de imagem: -->
+                <div class="mb-3">
+                    <label for="coverImage" class="form-label">Imagem de Capa</label>
+                    <input
+                        type="file"
+                        class="form-control"
+                        id="coverImage"
+                        name="cover_image"
+                        accept="image/*"
+                    >
+                    <div class="form-text">Imagem que representará seu plano de estudos (opcional)</div>
+                </div>
                 <!-- INPUT URL + TIPO + TITULO -->
-                <div class="input-group mb-3">
-                    <input
-                        type="url"
-                        class="form-control"
-                        id="contentUrlInput"
-                        placeholder="Cole a URL do conteúdo aqui"
-                        aria-label="URL do conteúdo"
-                    />
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="contentTitleInput"
-                        placeholder="Título do conteúdo"
-                        aria-label="Título do conteúdo"
-                    />
-                    <select class="form-select" id="contentTypeSelect" aria-label="Tipo do conteúdo">
-                        <option value="curso" selected>Curso</option>
-                        <option value="artigo">Artigo</option>
-                        <option value="podcast">Podcast</option>
-                        <option value="video">Vídeo</option>
-                        <option value="outro">Outro</option>
-                    </select>
-                    <button class="btn btn-primary" type="button" onclick="addUrlContent()">Adicionar</button>
+                <div class="mb-3">
+                    <div class="input-group mb-2">
+                        <input
+                            type="url"
+                            class="form-control"
+                            id="contentUrlInput"
+                            placeholder="Cole a URL do conteúdo aqui"
+                            aria-label="URL do conteúdo"
+                        />
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="contentTitleInput"
+                            placeholder="Título do conteúdo"
+                            aria-label="Título do conteúdo"
+                        />
+                        <select class="form-select" id="contentTypeSelect" aria-label="Tipo do conteúdo">
+                            <option value="video" selected>Vídeo</option>
+                            <option value="article">Artigo</option>
+                            <option value="podcast">Podcast</option>
+                            <option value="course">Curso</option>
+                            <option value="exercise">Exercício</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <textarea
+                            class="form-control"
+                            id="contentDescriptionInput"
+                            placeholder="Descrição do conteúdo"
+                            rows="2"
+                        ></textarea>
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">Tempo estimado (min)</span>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="contentTimeInput"
+                            placeholder="30"
+                            min="1"
+                            value="30"
+                        />
+
+                        <span class="input-group-text">Recurso</span>
+                        <select class="form-select" id="contentResourceSelect">
+                            <option value="1" selected>Externo</option>
+                            <option value="0">Interno</option>
+                        </select>
+
+                        <button class="btn btn-primary" type="button" onclick="addUrlContent()">Adicionar</button>
+                    </div>
                 </div>
 
+                <!-- Lista de conteúdos adicionados -->
                 <div id="contentsList" class="mb-3">
                     <div class="text-center text-muted py-4" id="noContentsPlaceholder">
                         <i class="fas fa-book-open fa-2x mb-2"></i>
                         <p>Nenhum conteúdo adicionado ainda</p>
                     </div>
                 </div>
+
+                <!-- Campo oculto para armazenar todos os steps -->
+                <div id="stepsContainer"></div>
             </div>
         </div>
 
         <!-- Botões de ação -->
         <div class="d-flex justify-content-between">
-            <a href="{{route('tracks.index')}}" class="btn btn-outline-secondary">Cancelar</a>
+            <a href="{{ route('tracks.index', ['username' => $user->username]) }}" class="btn btn-outline-secondary">Cancelar</a>
             <button type="submit" class="btn btn-primary">Salvar plano de estudos</button>
         </div>
     </form>
+
+    <script>
+        // Array para armazenar todos os conteúdos
+        let contentItems = [];
+
+        // Função para adicionar novo conteúdo à lista
+        function addUrlContent() {
+            const url = document.getElementById('contentUrlInput').value;
+            const title = document.getElementById('contentTitleInput').value;
+            const type = document.getElementById('contentTypeSelect').value;
+            const description = document.getElementById('contentDescriptionInput').value || 'Conteúdo do plano de estudos';
+            const estimatedTime = document.getElementById('contentTimeInput').value || 30;
+            const externalResource = document.getElementById('contentResourceSelect').value;
+
+            if (!url || !title) {
+                alert('Por favor, preencha a URL e o título do conteúdo.');
+                return;
+            }
+
+            // Adicionar ao array de conteúdos
+            contentItems.push({
+                url: url,
+                title: title,
+                type: type,
+                description: description,
+                estimated_time: estimatedTime,
+                external_resource: externalResource
+            });
+
+            // Atualizar os campos ocultos
+            updateHiddenFields();
+
+            // Remover o placeholder se for o primeiro item
+            const placeholder = document.getElementById('noContentsPlaceholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            // Criar o item de conteúdo na interface
+            const contentsList = document.getElementById('contentsList');
+            const contentItem = document.createElement('div');
+            contentItem.className = 'content-item d-flex align-items-center border rounded p-2 mb-2';
+            contentItem.dataset.index = contentItems.length - 1;
+
+            contentItem.innerHTML = `
+                <div class="me-auto">
+                    <div class="fw-semibold">${title}</div>
+                    <div class="small text-muted">${type} • ${url}</div>
+                    <div class="small text-muted">${description.substring(0, 50)}${description.length > 50 ? '...' : ''}</div>
+                    <div class="small text-muted">${estimatedTime} min • ${externalResource == 1 ? 'Recurso externo' : 'Recurso interno'}</div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeContent(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            contentsList.appendChild(contentItem);
+
+            // Limpar os campos
+            document.getElementById('contentUrlInput').value = '';
+            document.getElementById('contentTitleInput').value = '';
+            document.getElementById('contentDescriptionInput').value = '';
+            document.getElementById('contentTimeInput').value = '30';
+
+            console.log('Conteúdo adicionado:', contentItems);
+        }
+
+        // Função para remover um conteúdo da lista
+        function removeContent(button) {
+            const contentItem = button.closest('.content-item');
+            const index = parseInt(contentItem.dataset.index);
+
+            // Remover do array
+            contentItems.splice(index, 1);
+
+            // Atualizar os índices dos elementos restantes
+            const items = document.querySelectorAll('.content-item');
+            items.forEach((item, i) => {
+                if (i >= index) {
+                    item.dataset.index = i;
+                }
+            });
+
+            // Atualizar os campos ocultos
+            updateHiddenFields();
+
+            // Remover da interface
+            contentItem.remove();
+
+            // Verificar se a lista está vazia e adicionar o placeholder se necessário
+            const contentsList = document.getElementById('contentsList');
+            if (contentsList.children.length === 0) {
+                contentsList.innerHTML = `
+                    <div class="text-center text-muted py-4" id="noContentsPlaceholder">
+                        <i class="fas fa-book-open fa-2x mb-2"></i>
+                        <p>Nenhum conteúdo adicionado ainda</p>
+                    </div>
+                `;
+            }
+
+            console.log('Conteúdo removido, restantes:', contentItems);
+        }
+
+        // Função para atualizar os campos ocultos com os dados dos conteúdos
+        function updateHiddenFields() {
+            const container = document.getElementById('stepsContainer');
+            container.innerHTML = '';
+
+            contentItems.forEach((item, index) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = `steps[${index}]`;
+                input.value = JSON.stringify(item);
+                container.appendChild(input);
+            });
+        }
+
+        // Garantir que o formulário seja enviado corretamente
+        document.getElementById('createPlanForm').addEventListener('submit', function(event) {
+            // Verificar se há conteúdos para enviar
+            if (contentItems.length === 0) {
+                // Não é obrigatório ter conteúdos, então apenas logar
+                console.log('Enviando formulário sem conteúdos');
+            } else {
+                console.log('Enviando formulário com ' + contentItems.length + ' conteúdos');
+            }
+
+            // Não prevenir o comportamento padrão do formulário
+            // Isso garante que o formulário seja enviado e o redirecionamento ocorra
+        });
+    </script>
 
 @endsection

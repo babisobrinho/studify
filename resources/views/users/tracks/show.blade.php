@@ -7,13 +7,20 @@
             <div class="row g-0">
                 <div class="col-md-3">
                     <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <img src="https://via.placeholder.com/300x200/e9ecef/495057?text=Front-end" alt="Capa do plano" class="img-fluid h-100 w-100 object-fit-cover">
+                        <img src="https://via.placeholder.com/300x200/e9ecef/495057?text={{ ucfirst((string)$track->difficulty->value) }}" alt="Capa do plano" class="img-fluid h-100 w-100 object-fit-cover">
                     </div>
                 </div>
                 <div class="col-md-9 position-relative p-4">
                     <h1 class="h3 fw-bold text-primary mb-1">{{ $track->title }}</h1>
                     <div class="text-secondary mb-1">{{ $track->description }}</div>
-                    <div class="text-muted small mb-3">+5k views • +10k alunos</div>
+                    <div class="text-muted small mb-3">
+                        @if(isset($likesCount))
+                            <i class="fas fa-heart text-danger"></i> {{ $likesCount }} curtidas
+                        @endif
+                        @if(isset($avgRating) && $avgRating > 0)
+                            • <i class="fas fa-star text-warning"></i> {{ number_format($avgRating, 1) }}/5
+                        @endif
+                    </div>
 
                     <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
                         <button class="btn btn-outline-secondary btn-sm">Iniciar</button>
@@ -23,11 +30,13 @@
                     </div>
 
                     <div class="d-flex flex-wrap gap-2 mb-3">
-                        <!-- foreach das tags table track_tags -->
-                        <span class="badge bg-light text-primary rounded-pill px-3 py-1">HTML</span>
-                        <span class="badge bg-light text-primary rounded-pill px-3 py-1">CSS</span>
-                        <span class="badge bg-light text-primary rounded-pill px-3 py-1">JavaScript</span>
-                        <span class="badge bg-light text-primary rounded-pill px-3 py-1">React</span>
+                        @if(isset($tags) && count($tags) > 0)
+                            @foreach($tags as $tag)
+                                <span class="badge bg-light text-primary rounded-pill px-3 py-1">{{ $tag->name }}</span>
+                            @endforeach
+                        @else
+                            <span class="badge bg-light text-secondary rounded-pill px-3 py-1">Sem tags</span>
+                        @endif
                     </div>
 
                     <button class="btn btn-primary rounded-circle position-absolute" style="width:60px; height:60px; bottom:-30px; right:30px; box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);">
@@ -39,61 +48,60 @@
 
         <!-- Playlist Content -->
         <div class="bg-white rounded shadow-sm p-3 mb-4">
-            <!-- foreach dos steps table steps -->
-            @foreach([
-                ['num' => 1, 'img' => 'HTML', 'title' => 'Introdução ao HTML', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
-                ['num' => 2, 'img' => 'CSS', 'title' => 'Estilização com CSS', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
-                ['num' => 3, 'img' => 'JS', 'title' => 'JavaScript Básico', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
-                ['num' => 4, 'img' => 'DOM', 'title' => 'Manipulação do DOM', 'creator' => 'por Professor Web', 'progress' => 75, 'bookmark' => true],
-                ['num' => 5, 'img' => 'API', 'title' => 'Consumo de APIs', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
-                ['num' => 6, 'img' => 'React', 'title' => 'Introdução ao React', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
-                ['num' => 7, 'img' => 'Projeto', 'title' => 'Projeto Final', 'creator' => 'por Professor Web', 'progress' => 0, 'bookmark' => false],
-            ] as $course)
-                <div class="d-flex align-items-center border-bottom py-3 position-relative">
-                    <div class="text-secondary fw-bold text-center" style="width:30px;">{{ $course['num'] }}.</div>
-                    <div class="me-3" style="width:60px; height:60px;">
-                        <img src="https://via.placeholder.com/60x60/e9ecef/495057?text={{ $course['img'] }}" alt="Thumbnail do curso" class="img-fluid rounded">
+            @if(isset($steps) && count($steps) > 0)
+                @foreach($steps as $index => $step)
+                    <div class="d-flex align-items-center border-bottom py-3 position-relative">
+                        <div class="text-secondary fw-bold text-center" style="width:30px;">{{ $index + 1 }}.</div>
+                        <div class="me-3" style="width:60px; height:60px;">
+                            @php
+                                $contentType = is_object($step->content_type) ? $step->content_type->value : $step->content_type;
+                                $iconText = substr($contentType, 0, 3);
+                                if (strlen($iconText) < 1) {
+                                    $iconText = 'DOC';
+                                }
+                            @endphp
+                            <img src="https://via.placeholder.com/60x60/e9ecef/495057?text={{ strtoupper($iconText) }}"
+                                 alt="Thumbnail do conteúdo" class="img-fluid rounded">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold text-primary">{{ $step->title }}</div>
+                            <div class="small text-secondary">
+                                {{ ucfirst(is_object($step->content_type) ? $step->content_type->value : $step->content_type) }} •
+                                {{ $step->estimated_time }} min •
+                                {{ $step->external_resource ? 'Recurso externo' : 'Recurso interno' }}
+                            </div>
+                            <div class="small text-muted">{{ Str::limit($step->description, 100) }}</div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 me-3">
+                            <button class="btn p-0 border-0 text-secondary" aria-label="Bookmark">
+                                <i class="far fa-bookmark fs-5"></i>
+                            </button>
+                            <a href="{{ $step->content_url }}" target="_blank" class="btn p-0 border-0 text-secondary" aria-label="Play">
+                                <i class="fas fa-play fs-5"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="flex-grow-1">
-                        <div class="fw-semibold text-primary">{{ $course['title'] }}</div>
-                        <div class="small text-secondary">{{ $course['creator'] }}</div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3 me-3">
-                        <button class="btn p-0 border-0 {{ $course['bookmark'] ? 'text-primary' : 'text-secondary' }}" aria-label="Bookmark">
-                            <i class="{{ $course['bookmark'] ? 'fas' : 'far' }} fa-bookmark fs-5"></i>
-                        </button>
-                        <button class="btn p-0 border-0 text-secondary" aria-label="Play">
-                            <i class="fas fa-play fs-5"></i>
-                        </button>
-                    </div>
-                    <div class="position-absolute bottom-0 start-0 w-100" style="height: 4px; background-color: #f5f5f5;">
-                        <div class="bg-primary" style="height: 100%; width: {{ $course['progress'] }}%; transition: width 0.3s;"></div>
-                    </div>
-                </div>
-            @endforeach
+                @endforeach
+            @else
+                <!-- Mensagem quando não há steps -->
+            @endif
         </div>
 
         <!-- Instructors Section -->
         <div class="bg-white rounded shadow-sm p-4 mb-4">
             <h2 class="h5 fw-bold text-primary mb-4">Linha de Frente</h2>
             <div class="d-flex gap-3 overflow-auto pb-2">
-                <!-- autor + foreach dos contribuidores - acho que não existe table de contribuidores ainda -->
-                @foreach([
-                    ['img' => 'https://via.placeholder.com/80x80', 'badge' => 'plus', 'verified' => false, 'name' => 'Nome Apelido'],
-                    ['img' => 'https://via.placeholder.com/80x80', 'badge' => 'check', 'verified' => true, 'name' => 'Nome Apelido'],
-                    ['img' => 'https://via.placeholder.com/80x80', 'badge' => 'plus', 'verified' => false, 'name' => 'Nome Apelido'],
-                ] as $inst)
-                    <div class="text-center" style="width:100px;">
-                        <div class="position-relative mx-auto mb-2" style="width:80px; height:80px; border-radius: 50%; overflow: hidden; background-color:#e0e0e0;">
-                            <img src="{{ $inst['img'] }}" alt="Instrutor" class="img-fluid h-100 w-100 object-fit-cover">
-                            <div class="position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:20px; height:20px; background-color: {{ $inst['verified'] ? '#06D6A0' : '#E63946' }}; color:#fff; font-size:10px;">
-                                <i class="fas fa-{{ $inst['badge'] }}"></i>
-                            </div>
+                <!-- Autor do track -->
+                <div class="text-center" style="width:100px;">
+                    <div class="position-relative mx-auto mb-2" style="width:80px; height:80px; border-radius: 50%; overflow: hidden; background-color:#e0e0e0;">
+                        <img src="https://via.placeholder.com/80x80" alt="Autor" class="img-fluid h-100 w-100 object-fit-cover">
+                        <div class="position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center"
+                             style="width:20px; height:20px; background-color: #06D6A0; color:#fff; font-size:10px;">
+                            <i class="fas fa-check"></i>
                         </div>
-                        <div class="text-primary small">{{ $inst['name'] }}</div>
                     </div>
-                @endforeach
+                    <div class="text-primary small">{{ $user->name }}</div>
+                </div>
             </div>
         </div>
 
@@ -106,8 +114,6 @@
                     ['img' => 'UX/UI', 'title' => 'Design UX/UI para Desenvolvedores', 'creator' => 'por Designer Pro'],
                     ['img' => 'TypeScript', 'title' => 'TypeScript para Aplicações Robustas', 'creator' => 'por Desenvolvedor TS'],
                     ['img' => 'Next.js', 'title' => 'Desenvolvimento com Next.js', 'creator' => 'por React Master'],
-                    ['img' => 'Tailwind', 'title' => 'Estilização com Tailwind CSS', 'creator' => 'por CSS Expert'],
-                    ['img' => 'Vue.js', 'title' => 'Introdução ao Vue.js', 'creator' => 'por Vue Developer'],
                 ] as $rec)
                     <div class="card flex-shrink-0" style="min-width: 200px;">
                         <img src="https://via.placeholder.com/200x120/e9ecef/495057?text={{ $rec['img'] }}" class="card-img-top" alt="Thumbnail da recomendação">
@@ -125,7 +131,7 @@
 
             <div class="d-flex justify-content-between mt-4">
                 <a href="{{ route('tracks.index', ['username' => $user->username]) }}" class="btn btn-outline-secondary">Cancelar</a>
-                <a href="{{route('tracks.edit')}}" class="btn btn-outline-secondary">Editar</a>
+                <a href="{{route('tracks.edit', ['username' => $user->username, 'id'=>$track->id])}}" class="btn btn-outline-secondary">Editar</a>
             </div>
         </div>
     </div>
