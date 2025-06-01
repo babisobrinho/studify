@@ -3,8 +3,8 @@
 @section('content')
 
     <div class="mb-5 text-center">
-        <h1 class="fw-bold">Editar Plano de Estudos</h1>
-        <p class="text-muted fs-5">Atualize seu plano de estudos existente</p>
+        <h1 class="fw-bold" style="font-family: 'Poppins', sans-serif; color: #06D6A0;">Editar Plano de Estudos</h1>
+        <p class="text-muted fs-5" style="font-family: 'Inter', sans-serif;">Atualize seu plano de estudos existente</p>
     </div>
 
     <form id="editPlanForm" action="{{ route('tracks.update', ['username' => $user->username, 'id' => $track->id]) }}"
@@ -13,16 +13,16 @@
         @method('PATCH')
 
         <!-- Informações Básicas -->
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-info-circle me-2 text-primary"></i> Informações Básicas
+                    <i class="fas fa-info-circle me-2" style="color: #06D6A0;"></i> Informações Básicas
                 </h2>
 
                 <div class="mb-3">
                     <label for="planTitle" class="form-label fw-semibold">Título do Plano</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-primary text-white"><i class="fas fa-book"></i></span>
+                        <span class="input-group-text" style="background-color: #06D6A0; color: white;"><i class="fas fa-book"></i></span>
                         <input
                             type="text"
                             class="form-control"
@@ -59,10 +59,10 @@
         </div>
 
         <!-- Dificuldade e Tecnologias -->
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-tools me-2 text-success"></i> Dificuldade e Tecnologias
+                    <i class="fas fa-tools me-2" style="color: #06D6A0;"></i> Dificuldade e Tecnologias
                 </h2>
 
                 <div class="mb-4">
@@ -105,10 +105,10 @@
         </div>
 
         <!-- Conteúdos do Plano -->
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-file-alt me-2 text-warning"></i> Conteúdos do Plano
+                    <i class="fas fa-file-alt me-2" style="color: #06D6A0;"></i> Conteúdos do Plano
                 </h2>
                 <p class="text-muted mb-4">
                     Adicione cursos, artigos, vídeos ou outros recursos ao seu plano de estudos
@@ -123,14 +123,10 @@
                         id="coverImage"
                         name="cover_image"
                         accept="image/*"
+                        onchange="previewImage(this)"
                     >
-                    @if($track->cover_image)
-                        <div class="mt-2">
-                            <small>Imagem atual:</small>
-                            <img src="{{ asset('storage/' . $track->cover_image) }}" alt="Capa atual" class="img-thumbnail mt-2" style="max-width: 200px;">
-                        </div>
-                    @endif
                     <div class="form-text">Imagem que representará seu plano de estudos (opcional)</div>
+
                 </div>
 
                 <!-- INPUT URL + TIPO + TITULO -->
@@ -169,7 +165,7 @@
                     </div>
 
                     <div class="input-group mb-3 align-items-center">
-                        <span class="input-group-text">Tempo estimado (min)</span>
+                        <span class="input-group-text" style="background-color: #06D6A0; color: white;">Tempo estimado (min)</span>
                         <input
                             type="number"
                             class="form-control"
@@ -179,13 +175,13 @@
                             value="30"
                         />
 
-                        <span class="input-group-text">Recurso</span>
+                        <span class="input-group-text" style="background-color: #06D6A0; color: white;">Recurso</span>
                         <select class="form-select" id="contentResourceSelect">
                             <option value="1" selected>Externo</option>
                             <option value="0">Interno</option>
                         </select>
 
-                        <button class="btn btn-primary ms-3" type="button" onclick="addUrlContent()">
+                        <button class="btn ms-3" type="button" onclick="addUrlContent()" style="background-color: #06D6A0; color: white;">
                             <i class="fas fa-plus me-1"></i> Adicionar
                         </button>
                     </div>
@@ -200,15 +196,24 @@
                         </div>
                     @else
                         @foreach($steps as $step)
-                            <div class="content-item d-flex align-items-center border rounded p-2 mb-2" data-index="{{ $loop->index }}">
+                            <div class="content-item d-flex align-items-center border rounded p-2 mb-2" data-index="{{ $loop->index }}" style="transition: all 0.3s ease;">
+                                <div class="me-3">
+                                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 60px; height: 60px;">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="me-auto">
-                                    <div class="fw-semibold">{{ $step->title }}</div>
+                                    <div class="fw-semibold" style="color: #2C5364;">{{ $step->title }}</div>
                                     <div class="small text-muted">{{ $step->content_type }} • {{ $step->content_url }}</div>
                                     <div class="small text-muted">{{ Str::limit($step->description, 50) }}</div>
                                     <div class="small text-muted">{{ $step->estimated_time }} min • {{ $step->external_resource ? 'Recurso externo' : 'Recurso interno' }}</div>
                                 </div>
-                                <button type="button" class="btn btn-danger btn-sm px-3" onclick="removeContent(this)" title="Excluir conteúdo">
-                                    <i class="fas fa-times me-2"></i> Excluir Conteúdo
+                                <button type="button" class="btn btn-sm px-3" onclick="removeContent(this)" title="Excluir conteúdo" style="background-color: #0F2027; color: white;">
+                                    <i class="fas fa-times me-2"></i> Excluir
                                 </button>
                             </div>
                         @endforeach
@@ -236,13 +241,38 @@
             <a href="{{ route('tracks.show', ['username' => $user->username, 'id' => $track->id]) }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i> Cancelar
             </a>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn" style="background-color: #06D6A0; color: white;">
                 <i class="fas fa-save me-2"></i> Atualizar plano de estudos
             </button>
         </div>
     </form>
 
     <script>
+        // Função para preview da imagem
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px;">`;
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 200px; height: 120px;">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 60px; height: 60px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         @php
             $contentItems = [];
             foreach ($steps as $step) {
@@ -292,17 +322,27 @@
             const contentItem = document.createElement('div');
             contentItem.className = 'content-item d-flex align-items-center border rounded p-2 mb-2';
             contentItem.dataset.index = contentItems.length - 1;
+            contentItem.style.transition = 'all 0.3s ease';
 
             contentItem.innerHTML = `
+                <div class="me-3">
+                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 60px; height: 60px;">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
                 <div class="me-auto">
-                    <div class="fw-semibold">${title}</div>
+                    <div class="fw-semibold" style="color: #2C5364;">${title}</div>
                     <div class="small text-muted">${type} • ${url}</div>
                     <div class="small text-muted">${description.substring(0, 50)}${description.length > 50 ? '...' : ''}</div>
                     <div class="small text-muted">${estimatedTime} min • ${externalResource == 1 ? 'Recurso externo' : 'Recurso interno'}</div>
                 </div>
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeContent(this)">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button type="button" class="btn btn-sm px-3" onclick="removeContent(this)" title="Excluir conteúdo" style="background-color: #0F2027; color: white;">
+        <i class="fas fa-times me-2"></i> Excluir
+    </button>
             `;
 
             contentsList.appendChild(contentItem);
@@ -328,12 +368,11 @@
                 }
             });
 
+            contentItem.remove();
             updateHiddenFields();
 
-            contentItem.remove();
-
-            const contentsList = document.getElementById('contentsList');
-            if (contentsList.children.length === 0) {
+            if (contentItems.length === 0) {
+                const contentsList = document.getElementById('contentsList');
                 contentsList.innerHTML = `
                     <div class="text-center text-muted py-4" id="noContentsPlaceholder">
                         <i class="fas fa-book-open fa-2x mb-2"></i>
@@ -353,18 +392,16 @@
                 const input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = `steps[${index}]`;
-                input.value = JSON.stringify(item);
+                input.value = JSON.stringify({
+                    url: item.url,
+                    title: item.title,
+                    type: item.type,
+                    description: item.description,
+                    estimated_time: item.estimated_time,
+                    external_resource: item.external_resource
+                });
                 container.appendChild(input);
             });
         }
-
-        document.getElementById('editPlanForm').addEventListener('submit', function(event) {
-            if (contentItems.length === 0) {
-                console.log('Enviando formulário sem conteúdos');
-            } else {
-                console.log('Enviando formulário com ' + contentItems.length + ' conteúdos');
-            }
-        });
     </script>
-
 @endsection

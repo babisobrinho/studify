@@ -3,8 +3,8 @@
 @section('content')
 
     <div class="mb-5 text-center">
-        <h1 class="fw-bold">Criar Novo Plano de Estudos</h1>
-        <p class="text-muted fs-5">Organize seu aprendizado com um plano estruturado</p>
+        <h1 class="fw-bold" style="font-family: 'Poppins', sans-serif; color: #06D6A0;">Criar Novo Plano de Estudos</h1>
+        <p class="text-muted fs-5" style="font-family: 'Inter', sans-serif;">Organize seu aprendizado com um plano estruturado</p>
     </div>
 
     <form id="createPlanForm" action="{{ route('tracks.store', ['username' => $user->username]) }}"
@@ -12,16 +12,16 @@
         @csrf
 
         <!-- Informações Básicas -->
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-info-circle me-2 text-primary"></i> Informações Básicas
+                    <i class="fas fa-info-circle me-2" style="color: #06D6A0;"></i> Informações Básicas
                 </h2>
 
                 <div class="mb-3">
                     <label for="planTitle" class="form-label fw-semibold">Título do Plano</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-primary text-white"><i class="fas fa-book"></i></span>
+                        <span class="input-group-text" style="background-color: #06D6A0; color: white;"><i class="fas fa-book"></i></span>
                         <input
                             type="text"
                             class="form-control"
@@ -57,10 +57,10 @@
         </div>
 
         <!-- Dificuldade e Tecnologias -->
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-tools me-2 text-success"></i> Dificuldade e Tecnologias
+                    <i class="fas fa-tools me-2" style="color: #06D6A0;"></i> Dificuldade e Tecnologias
                 </h2>
 
                 <div class="mb-4">
@@ -102,10 +102,10 @@
         </div>
 
         <!-- Conteúdos do Plano -->
-        <div class="card mb-4 shadow-sm">
+        <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-file-alt me-2 text-warning"></i> Conteúdos do Plano
+                    <i class="fas fa-file-alt me-2" style="color: #06D6A0;"></i> Conteúdos do Plano
                 </h2>
                 <p class="text-muted mb-4">
                     Adicione cursos, artigos, vídeos ou outros recursos ao seu plano de estudos
@@ -120,8 +120,11 @@
                         id="coverImage"
                         name="cover_image"
                         accept="image/*"
+                        onchange="previewImage(this)"
                     >
                     <div class="form-text">Imagem que representará seu plano de estudos (opcional)</div>
+
+
                 </div>
 
                 <!-- INPUT URL + TIPO + TITULO -->
@@ -160,7 +163,7 @@
                     </div>
 
                     <div class="input-group mb-3 align-items-center">
-                        <span class="input-group-text">Tempo estimado (min)</span>
+                        <span class="input-group-text" style="background-color: #06D6A0; color: white;">Tempo estimado (min)</span>
                         <input
                             type="number"
                             class="form-control"
@@ -170,13 +173,13 @@
                             value="30"
                         />
 
-                        <span class="input-group-text">Recurso</span>
+                        <span class="input-group-text" style="background-color: #06D6A0; color: white;">Recurso</span>
                         <select class="form-select" id="contentResourceSelect">
                             <option value="1" selected>Externo</option>
                             <option value="0">Interno</option>
                         </select>
 
-                        <button class="btn btn-primary ms-3" type="button" onclick="addUrlContent()">
+                        <button class="btn ms-3" type="button" onclick="addUrlContent()" style="background-color: #06D6A0; color: white;">
                             <i class="fas fa-plus me-1"></i> Adicionar
                         </button>
                     </div>
@@ -200,7 +203,7 @@
             <a href="{{ route('tracks.index', ['username' => $user->username]) }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i> Cancelar
             </a>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn" style="background-color: #06D6A0; color: white;">
                 <i class="fas fa-save me-2"></i> Salvar plano de estudos
             </button>
         </div>
@@ -208,6 +211,27 @@
 
     <script>
         // Seu JavaScript permanece o mesmo (pode manter como está)
+
+        // Adicionar função para preview da imagem
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-width: 100%; max-height: 120px;">`;
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 60px; height: 60px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                        <i class="fas fa-play text-white"></i>
+                    </div>
+                `;
+            }
+        }
     </script>
 
 @endsection
