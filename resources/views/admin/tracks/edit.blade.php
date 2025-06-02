@@ -98,4 +98,118 @@
 
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label for="difficulty" class="form
+                            <label for="difficulty" class="form-label">Nível*</label>
+                            <select class="form-select @error('difficulty') is-invalid @enderror" 
+                                    id="difficulty" name="difficulty" required>
+                                <option value="beginner" {{ old('difficulty', $track->difficulty) == 'beginner' ? 'selected' : '' }}>Iniciante</option>
+                                <option value="intermediate" {{ old('difficulty', $track->difficulty) == 'intermediate' ? 'selected' : '' }}>Intermediário</option>
+                                <option value="advanced" {{ old('difficulty', $track->difficulty) == 'advanced' ? 'selected' : '' }}>Avançado</option>
+                            </select>
+                            @error('difficulty')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch pt-4">
+                                <input class="form-check-input" type="checkbox" 
+                                       id="is_official" name="is_official" 
+                                       {{ old('is_official', $track->is_official) ? 'checked' : '' }} />
+                                <label class="form-check-label" for="is_official">Curso Oficial</label>
+                            </div>
+                            @error('is_official')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check form-switch pt-4">
+                                <input class="form-check-input" type="checkbox" 
+                                       id="is_public" name="is_public" 
+                                       {{ old('is_public', $track->is_public) ? 'checked' : '' }} />
+                                <label class="form-check-label" for="is_public">Curso Público</label>
+                            </div>
+                            @error('is_public')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+    <label for="cover_image" class="form-label">Imagem do Curso</label>
+    <input type="file" class="form-control @error('cover_image') is-invalid @enderror" 
+        id="cover_image" name="cover_image" 
+        accept="image/*" />
+    @error('cover_image')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    @if($track->cover_image)
+        <div class="mt-2">
+            <img src="{{ Storage::url($track->cover_image) }}" alt="Capa atual" style="max-height: 150px;" class="img-thumbnail">
+            <small class="d-block text-muted">Imagem atual - deixe em branco para manter</small>
+        </div>
+    @endif
+</div>
+
+                    <div class="d-flex justify-content-between gap-2">
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bi bi-trash"></i> Excluir Curso
+                        </button>
+                        <div class="d-flex gap-2">
+                            <button type="reset" class="btn btn-outline-secondary">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir o curso "<strong>{{ $track->title }}</strong>"? Esta ação não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{{ route('admin.tracks.destroy', $track->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            // Geração automática do slug baseado no título
+            document.getElementById('title').addEventListener('input', function() {
+                const title = this.value;
+                const slug = title.toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+                    .replace(/[\s_-]+/g, '-') // Substitui espaços e underscores por hífens
+                    .replace(/^-+|-+$/g, ''); // Remove hífens extras no início/fim
+                
+                document.getElementById('slug').value = slug;
+            });
+
+            // Inicializa o select2 para tags
+            $(document).ready(function() {
+                $('#tags').select2({
+                    placeholder: "Selecione as tags",
+                    allowClear: true
+                });
+            });
+        </script>
+    @endpush
+@endsection
