@@ -111,6 +111,20 @@
                 </h2>
 
                 <div class="mb-4">
+                    <label for="planCategory" class="form-label fw-semibold">Categoria</label>
+                    <p class="text-muted small mb-2">Selecione a categoria principal deste plano de estudos</p>
+                    <select class="form-select" id="planCategory" name="category_id" required>
+                        <option value="" disabled>Selecione uma categoria</option>
+                        @php
+                            $categories = DB::table('categories')->get();
+                        @endphp
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ (old('category_id', $track->category_id) == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-4">
                     <label for="planDifficulty" class="form-label fw-semibold">Nível de Dificuldade</label>
                     <p class="text-muted small mb-2">Selecione o nível de dificuldade deste plano de estudos</p>
                     <select class="form-select" id="planDifficulty" name="difficulty" required>
@@ -287,13 +301,15 @@
                 <i class="fas fa-arrow-left me-2"></i> Cancelar
             </a>
             <button type="submit" class="btn" style="background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; color: white;">
-                <i class="fas fa-save me-2"></i> Atualizar plano de estudos
+                <i class="fas fa-save me-2"></i> Salvar alterações
             </button>
         </div>
     </form>
 
     <script>
-        // Função para preview da imagem
+        // Seu JavaScript permanece o mesmo (pode manter como está)
+
+        // Adicionar função para preview da imagem
         function previewImage(input) {
             const preview = document.getElementById('imagePreview');
 
@@ -301,38 +317,18 @@
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
-                    preview.innerHTML = `<img src="${e.target.result}" class="img-thumbnail" style="max-width: 200px;">`;
+                    preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-width: 100%; max-height: 120px;">`;
                 }
 
                 reader.readAsDataURL(input.files[0]);
             } else {
                 preview.innerHTML = `
-                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 200px; height: 120px;">
-                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 60px; height: 60px; background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
+                    <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 60px; height: 60px; background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                        <i class="fas fa-play text-white"></i>
                     </div>
                 `;
             }
         }
-
-        @php
-            $contentItems = [];
-            foreach ($steps as $step) {
-                $contentItems[] = [
-                    'url' => $step->content_url,
-                    'title' => $step->title,
-                    'type' => $step->content_type,
-                    'description' => $step->description,
-                    'estimated_time' => $step->estimated_time,
-                    'external_resource' => $step->external_resource,
-                ];
-            }
-        @endphp
-
-        let contentItems = @json($contentItems);
 
         // Função para atualizar a visualização da cor selecionada
         function updateColorPreview(input) {
@@ -352,18 +348,11 @@
             input.nextElementSibling.style.border = '3px solid #000';
 
             // Atualiza a cor dos elementos de destaque na página
-            const elementsToUpdate = document.querySelectorAll('.input-group-text, .btn[style*="background-color:"], .fas[style*="color:"]');
+            const elementsToUpdate = document.querySelectorAll('.input-group-text, .btn[style*="background-color"]');
             elementsToUpdate.forEach(element => {
-                if (element.classList.contains('input-group-text') || element.classList.contains('btn')) {
+                if (element.style.backgroundColor.includes('#')) {
                     element.style.backgroundColor = colorCode;
-                } else if (element.classList.contains('fas')) {
-                    element.style.color = colorCode;
                 }
-            });
-
-            // Atualiza os círculos dos conteúdos
-            document.querySelectorAll('.rounded-circle[style*="background-color:"]').forEach(circle => {
-                circle.style.backgroundColor = colorCode;
             });
         }
     </script>

@@ -48,10 +48,11 @@ class TrackController extends Controller
             'description' => 'nullable|string',
             'is_public' => 'boolean',
             'difficulty' => 'required|string|in:beginner,intermediate,advanced',
+            'category_id' => 'required|exists:categories,id', // Adicionada validação para o campo category_id
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'plan_color' => 'nullable|string|max:7', // Adicionada validação para o campo plan_color
+            'plan_color' => 'nullable|string|max:7',
         ]);
 
         // Criar o track
@@ -61,8 +62,9 @@ class TrackController extends Controller
         $track->description = $validated['description'] ?? null;
         $track->is_public = $validated['is_public'] ?? 1;
         $track->difficulty = $validated['difficulty'];
+        $track->category_id = $validated['category_id']; // Adicionada atribuição do campo category_id
         $track->user_id = $user->id;
-        $track->plan_color = $request->input('plan_color', '#06d6a0'); // Adicionada atribuição do campo plan_color
+        $track->plan_color = $request->input('plan_color', '#06d6a0');
 
         // Processar upload da imagem
         if ($request->hasFile('cover_image')) {
@@ -129,6 +131,12 @@ class TrackController extends Controller
             ->select('tags.*')
             ->get();
 
+        // Carregar a categoria do track
+        $category = null;
+        if ($track->category_id) {
+            $category = DB::table('categories')->where('id', $track->category_id)->first();
+        }
+
         // Carregar estatísticas do track (likes, visualizações)
         $likesCount = DB::table('likes')
             ->where('track_id', $track->id)
@@ -141,7 +149,7 @@ class TrackController extends Controller
 
         $avgRating = $ratings->avg('rating') ?? 0;
 
-        return view('users.tracks.show', compact('user', 'track', 'steps', 'tags', 'likesCount', 'avgRating'));
+        return view('users.tracks.show', compact('user', 'track', 'steps', 'tags', 'category', 'likesCount', 'avgRating'));
     }
 
     /**
@@ -188,9 +196,10 @@ class TrackController extends Controller
             'description' => 'nullable|string',
             'is_public' => 'boolean',
             'difficulty' => 'required|string|in:beginner,intermediate,advanced',
+            'category_id' => 'required|exists:categories,id', // Adicionada validação para o campo category_id
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
-            'plan_color' => 'nullable|string|max:7', // Adicionada validação para o campo plan_color
+            'plan_color' => 'nullable|string|max:7',
         ]);
 
         // Atualizar o track
@@ -199,7 +208,8 @@ class TrackController extends Controller
         $track->description = $validated['description'] ?? null;
         $track->is_public = $validated['is_public'] ?? 1;
         $track->difficulty = $validated['difficulty'];
-        $track->plan_color = $request->input('plan_color', $track->plan_color ?? '#06d6a0'); // Adicionada atribuição do campo plan_color
+        $track->category_id = $validated['category_id']; // Adicionada atribuição do campo category_id
+        $track->plan_color = $request->input('plan_color', $track->plan_color ?? '#06d6a0');
         $track->save();
 
         // Atualizar as tecnologias selecionadas

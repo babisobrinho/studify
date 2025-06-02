@@ -107,6 +107,20 @@
                 </h2>
 
                 <div class="mb-4">
+                    <label for="planCategory" class="form-label fw-semibold">Categoria</label>
+                    <p class="text-muted small mb-2">Selecione a categoria principal deste plano de estudos</p>
+                    <select class="form-select" id="planCategory" name="category_id" required>
+                        <option value="" selected disabled>Selecione uma categoria</option>
+                        @php
+                            $categories = DB::table('categories')->get();
+                        @endphp
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-4">
                     <label for="planDifficulty" class="form-label fw-semibold">Nível de Dificuldade</label>
                     <p class="text-muted small mb-2">Selecione o nível de dificuldade deste plano de estudos</p>
                     <select class="form-select" id="planDifficulty" name="difficulty" required>

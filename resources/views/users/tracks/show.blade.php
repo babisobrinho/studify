@@ -33,12 +33,29 @@
                     </div>
 
                     <div class="d-flex flex-wrap gap-2 mb-3">
+                        <!-- Exibir a categoria -->
+                        @if(isset($category))
+                            <span class="badge rounded-pill px-3 py-1" style="background-color: {{ $track->plan_color ?? '#06D6A0' }}; color: white;">
+                                <i class="fas fa-folder me-1"></i> {{ $category->name }}
+                            </span>
+                        @endif
+
+                        <!-- Exibir o nível de dificuldade -->
+                        <span class="badge rounded-pill px-3 py-1" style="background-color: #EDF2F4; color: {{ $track->plan_color ?? '#2C5364' }};">
+                            @if($track->difficulty === 'beginner')
+                                <i class="fas fa-signal-1 me-1"></i> Iniciante
+                            @elseif($track->difficulty === 'intermediate')
+                                <i class="fas fa-signal-2 me-1"></i> Intermediário
+                            @elseif($track->difficulty === 'advanced')
+                                <i class="fas fa-signal-3 me-1"></i> Avançado
+                            @endif
+                        </span>
+
+                        <!-- Exibir as tags -->
                         @if(isset($tags) && count($tags) > 0)
                             @foreach($tags as $tag)
                                 <span class="badge rounded-pill px-3 py-1" style="background-color: #EDF2F4; color: {{ $track->plan_color ?? '#2C5364' }}; transition: all 0.3s ease;">{{ $tag->name }}</span>
                             @endforeach
-                        @else
-                            <span class="badge rounded-pill px-3 py-1" style="background-color: #EDF2F4; color: {{ $track->plan_color ?? '#2C5364' }};">Sem tags</span>
                         @endif
                     </div>
 
