@@ -51,6 +51,7 @@ class TrackController extends Controller
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'plan_color' => 'nullable|string|max:7', // Adicionada validação para o campo plan_color
         ]);
 
         // Criar o track
@@ -61,6 +62,7 @@ class TrackController extends Controller
         $track->is_public = $validated['is_public'] ?? 1;
         $track->difficulty = $validated['difficulty'];
         $track->user_id = $user->id;
+        $track->plan_color = $request->input('plan_color', '#06d6a0'); // Adicionada atribuição do campo plan_color
 
         // Processar upload da imagem
         if ($request->hasFile('cover_image')) {
@@ -188,6 +190,7 @@ class TrackController extends Controller
             'difficulty' => 'required|string|in:beginner,intermediate,advanced',
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
+            'plan_color' => 'nullable|string|max:7', // Adicionada validação para o campo plan_color
         ]);
 
         // Atualizar o track
@@ -196,6 +199,7 @@ class TrackController extends Controller
         $track->description = $validated['description'] ?? null;
         $track->is_public = $validated['is_public'] ?? 1;
         $track->difficulty = $validated['difficulty'];
+        $track->plan_color = $request->input('plan_color', $track->plan_color ?? '#06d6a0'); // Adicionada atribuição do campo plan_color
         $track->save();
 
         // Atualizar as tecnologias selecionadas

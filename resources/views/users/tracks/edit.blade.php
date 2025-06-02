@@ -22,7 +22,7 @@
                 <div class="mb-3">
                     <label for="planTitle" class="form-label fw-semibold">Título do Plano</label>
                     <div class="input-group">
-                        <span class="input-group-text" style="background-color: #06D6A0; color: white;"><i class="fas fa-book"></i></span>
+                        <span class="input-group-text" style="background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; color: white;"><i class="fas fa-book"></i></span>
                         <input
                             type="text"
                             class="form-control"
@@ -55,6 +55,51 @@
                         <option value="0" {{ !$track->is_public ? 'selected' : '' }}>Privado - Apenas você pode ver</option>
                     </select>
                 </div>
+
+                <!-- Novo campo para escolha de cor do plano -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Cor do Plano</label>
+                    <p class="text-muted small mb-2">Escolha uma cor para personalizar seu plano de estudos</p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        @php
+                            $colors = [
+                                '#06d6a0' => 'Verde Água',                         '#4fff7b' => 'Verde Limão',
+                                '#f72585' => 'Rosa',
+                                '#f8961e' => 'Laranja',
+                                '#345e7d' => 'Azul Marinho',
+                                '#5ddaf8' => 'Azul Claro'
+                            ];
+                            $currentColor = old('plan_color', $track->plan_color ?? '#06d6a0');
+                        @endphp
+
+                        @foreach($colors as $colorCode => $colorName)
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input visually-hidden"
+                                    type="radio"
+                                    name="plan_color"
+                                    id="color_{{ str_replace('#', '', $colorCode) }}"
+                                    value="{{ $colorCode }}"
+                                    {{ $colorCode === $currentColor ? 'checked' : '' }}
+                                    onchange="updateColorPreview(this)"
+                                >
+                                <label
+                                    class="form-check-label color-option p-0"
+                                    for="color_{{ str_replace('#', '', $colorCode) }}"
+                                    style="width: 40px; height: 40px; background-color: {{ $colorCode }}; border-radius: 50%; cursor: pointer; border: 3px solid {{ $colorCode === $currentColor ? '#000' : 'transparent' }};"
+                                    title="{{ $colorName }}"
+                                    onclick="this.previousElementSibling.checked = true; updateColorPreview(this.previousElementSibling);"
+                                ></label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div id="colorPreview" class="mt-2">
+                        <span class="badge p-2" style="background-color: {{ $currentColor }};">
+                            Cor selecionada: {{ $colors[$currentColor] ?? 'Personalizada' }}
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -62,7 +107,7 @@
         <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-tools me-2" style="color: #06D6A0;"></i> Dificuldade e Tecnologias
+                    <i class="fas fa-tools me-2" style="color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }};"></i> Dificuldade e Tecnologias
                 </h2>
 
                 <div class="mb-4">
@@ -108,7 +153,7 @@
         <div class="card mb-4 shadow-sm" style="border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
             <div class="card-body">
                 <h2 class="card-title h5 mb-4">
-                    <i class="fas fa-file-alt me-2" style="color: #06D6A0;"></i> Conteúdos do Plano
+                    <i class="fas fa-file-alt me-2" style="color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }};"></i> Conteúdos do Plano
                 </h2>
                 <p class="text-muted mb-4">
                     Adicione cursos, artigos, vídeos ou outros recursos ao seu plano de estudos
@@ -165,7 +210,7 @@
                     </div>
 
                     <div class="input-group mb-3 align-items-center">
-                        <span class="input-group-text" style="background-color: #06D6A0; color: white;">Tempo estimado (min)</span>
+                        <span class="input-group-text" style="background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; color: white;">Tempo estimado (min)</span>
                         <input
                             type="number"
                             class="form-control"
@@ -175,13 +220,13 @@
                             value="30"
                         />
 
-                        <span class="input-group-text" style="background-color: #06D6A0; color: white;">Recurso</span>
+                        <span class="input-group-text" style="background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; color: white;">Recurso</span>
                         <select class="form-select" id="contentResourceSelect">
                             <option value="1" selected>Externo</option>
                             <option value="0">Interno</option>
                         </select>
 
-                        <button class="btn ms-3" type="button" onclick="addUrlContent()" style="background-color: #06D6A0; color: white;">
+                        <button class="btn ms-3" type="button" onclick="addUrlContent()" style="background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; color: white;">
                             <i class="fas fa-plus me-1"></i> Adicionar
                         </button>
                     </div>
@@ -199,7 +244,7 @@
                             <div class="content-item d-flex align-items-center border rounded p-2 mb-2" data-index="{{ $loop->index }}" style="transition: all 0.3s ease;">
                                 <div class="me-3">
                                     <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 60px; height: 60px;">
-                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
                                                 <path d="M8 5v14l11-7z"/>
                                             </svg>
@@ -241,7 +286,7 @@
             <a href="{{ route('tracks.show', ['username' => $user->username, 'id' => $track->id]) }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i> Cancelar
             </a>
-            <button type="submit" class="btn" style="background-color: #06D6A0; color: white;">
+            <button type="submit" class="btn" style="background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; color: white;">
                 <i class="fas fa-save me-2"></i> Atualizar plano de estudos
             </button>
         </div>
@@ -263,7 +308,7 @@
             } else {
                 preview.innerHTML = `
                     <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 200px; height: 120px;">
-                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 60px; height: 60px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 60px; height: 60px; background-color: {{ old('plan_color', $track->plan_color ?? '#06D6A0') }}; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z"/>
                             </svg>
@@ -289,119 +334,38 @@
 
         let contentItems = @json($contentItems);
 
-        function addUrlContent() {
-            const url = document.getElementById('contentUrlInput').value;
-            const title = document.getElementById('contentTitleInput').value;
-            const type = document.getElementById('contentTypeSelect').value;
-            const description = document.getElementById('contentDescriptionInput').value || 'Conteúdo do plano de estudos';
-            const estimatedTime = document.getElementById('contentTimeInput').value || 30;
-            const externalResource = document.getElementById('contentResourceSelect').value;
+        // Função para atualizar a visualização da cor selecionada
+        function updateColorPreview(input) {
+            const colorCode = input.value;
+            const colorName = input.parentElement.querySelector('label').getAttribute('title');
 
-            if (!url || !title) {
-                alert('Por favor, preencha a URL e o título do conteúdo.');
-                return;
-            }
-
-            contentItems.push({
-                url: url,
-                title: title,
-                type: type,
-                description: description,
-                estimated_time: estimatedTime,
-                external_resource: externalResource
-            });
-
-            updateHiddenFields();
-
-            const placeholder = document.getElementById('noContentsPlaceholder');
-            if (placeholder) {
-                placeholder.remove();
-            }
-
-            const contentsList = document.getElementById('contentsList');
-            const contentItem = document.createElement('div');
-            contentItem.className = 'content-item d-flex align-items-center border rounded p-2 mb-2';
-            contentItem.dataset.index = contentItems.length - 1;
-            contentItem.style.transition = 'all 0.3s ease';
-
-            contentItem.innerHTML = `
-                <div class="me-3">
-                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="width: 60px; height: 60px;">
-                        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: #06D6A0; box-shadow: 0 4px 10px rgba(6, 214, 160, 0.3);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="me-auto">
-                    <div class="fw-semibold" style="color: #2C5364;">${title}</div>
-                    <div class="small text-muted">${type} • ${url}</div>
-                    <div class="small text-muted">${description.substring(0, 50)}${description.length > 50 ? '...' : ''}</div>
-                    <div class="small text-muted">${estimatedTime} min • ${externalResource == 1 ? 'Recurso externo' : 'Recurso interno'}</div>
-                </div>
-                <button type="button" class="btn btn-sm px-3" onclick="removeContent(this)" title="Excluir conteúdo" style="background-color: #0F2027; color: white;">
-        <i class="fas fa-times me-2"></i> Excluir
-    </button>
+            // Atualiza o preview da cor
+            document.getElementById('colorPreview').innerHTML = `
+                <span class="badge p-2" style="background-color: ${colorCode};">Cor selecionada: ${colorName}</span>
             `;
 
-            contentsList.appendChild(contentItem);
+            // Atualiza as bordas das opções de cor
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.style.border = '3px solid transparent';
+            });
 
-            document.getElementById('contentUrlInput').value = '';
-            document.getElementById('contentTitleInput').value = '';
-            document.getElementById('contentDescriptionInput').value = '';
-            document.getElementById('contentTimeInput').value = '30';
+            input.nextElementSibling.style.border = '3px solid #000';
 
-            console.log('Conteúdo adicionado:', contentItems);
-        }
-
-        function removeContent(button) {
-            const contentItem = button.closest('.content-item');
-            const index = parseInt(contentItem.dataset.index);
-
-            contentItems.splice(index, 1);
-
-            const items = document.querySelectorAll('.content-item');
-            items.forEach((item, i) => {
-                if (i >= index) {
-                    item.dataset.index = i;
+            // Atualiza a cor dos elementos de destaque na página
+            const elementsToUpdate = document.querySelectorAll('.input-group-text, .btn[style*="background-color:"], .fas[style*="color:"]');
+            elementsToUpdate.forEach(element => {
+                if (element.classList.contains('input-group-text') || element.classList.contains('btn')) {
+                    element.style.backgroundColor = colorCode;
+                } else if (element.classList.contains('fas')) {
+                    element.style.color = colorCode;
                 }
             });
 
-            contentItem.remove();
-            updateHiddenFields();
-
-            if (contentItems.length === 0) {
-                const contentsList = document.getElementById('contentsList');
-                contentsList.innerHTML = `
-                    <div class="text-center text-muted py-4" id="noContentsPlaceholder">
-                        <i class="fas fa-book-open fa-2x mb-2"></i>
-                        <p>Nenhum conteúdo adicionado ainda</p>
-                    </div>
-                `;
-            }
-
-            console.log('Conteúdo removido, restantes:', contentItems);
-        }
-
-        function updateHiddenFields() {
-            const container = document.getElementById('stepsContainer');
-            container.innerHTML = '';
-
-            contentItems.forEach((item, index) => {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = `steps[${index}]`;
-                input.value = JSON.stringify({
-                    url: item.url,
-                    title: item.title,
-                    type: item.type,
-                    description: item.description,
-                    estimated_time: item.estimated_time,
-                    external_resource: item.external_resource
-                });
-                container.appendChild(input);
+            // Atualiza os círculos dos conteúdos
+            document.querySelectorAll('.rounded-circle[style*="background-color:"]').forEach(circle => {
+                circle.style.backgroundColor = colorCode;
             });
         }
     </script>
+
 @endsection

@@ -53,6 +53,49 @@
                         <option value="0">Privado - Apenas você pode ver</option>
                     </select>
                 </div>
+
+                <!-- Novo campo para escolha de cor do plano -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Cor do Plano</label>
+                    <p class="text-muted small mb-2">Escolha uma cor para personalizar seu plano de estudos</p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        @php
+                            $colors = [
+                                '#06d6a0' => 'Verde Água',
+                                '#4fff7b' => 'Verde Limão',
+                                '#f72585' => 'Rosa',
+                                '#f8961e' => 'Laranja',
+                                '#345e7d' => 'Azul Marinho',
+                                '#5ddaf8' => 'Azul Claro'
+                            ];
+                        @endphp
+
+                        @foreach($colors as $colorCode => $colorName)
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input visually-hidden"
+                                    type="radio"
+                                    name="plan_color"
+                                    id="color_{{ str_replace('#', '', $colorCode) }}"
+                                    value="{{ $colorCode }}"
+                                    {{ $colorCode === '#06d6a0' ? 'checked' : '' }}
+                                    onchange="updateColorPreview(this)"
+                                >
+                                <label
+                                    class="form-check-label color-option p-0"
+                                    for="color_{{ str_replace('#', '', $colorCode) }}"
+                                    style="width: 40px; height: 40px; background-color: {{ $colorCode }}; border-radius: 50%; cursor: pointer; border: 3px solid {{ $colorCode === '#06d6a0' ? '#000' : 'transparent' }};"
+                                    title="{{ $colorName }}"
+                                    onclick="this.previousElementSibling.checked = true; updateColorPreview(this.previousElementSibling);"
+                                ></label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div id="colorPreview" class="mt-2">
+                        <span class="badge p-2" style="background-color: #06d6a0;">Cor selecionada: Verde Água</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -231,6 +274,30 @@
                     </div>
                 `;
             }
+        }
+
+        // Função para atualizar a visualização da cor selecionada
+        function updateColorPreview(input) {
+            const colorCode = input.value;
+            const colorName = input.parentElement.querySelector('label').getAttribute('title');
+
+            // Atualiza o preview da cor
+            document.getElementById('colorPreview').innerHTML = `
+                <span class="badge p-2" style="background-color: ${colorCode};">Cor selecionada: ${colorName}</span>
+            `;
+
+            // Atualiza as bordas das opções de cor
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.style.border = '3px solid transparent';
+            });
+
+            input.nextElementSibling.style.border = '3px solid #000';
+
+            // Atualiza a cor dos elementos de destaque na página
+            const elementsToUpdate = document.querySelectorAll('.input-group-text, .btn[style*="background-color: #06D6A0"]');
+            elementsToUpdate.forEach(element => {
+                element.style.backgroundColor = colorCode;
+            });
         }
     </script>
 

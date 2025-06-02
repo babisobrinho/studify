@@ -17,7 +17,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <a href="{{ route('tracks.show', ['username' => $user->username, 'id' => $track->id]) }}" class="text-decoration-none">
                         <div class="card border-0 h-100 shadow">
-                            <div class="card-body border-start bg-white p-4 rounded">
+                            <div class="card-body border-start bg-white p-4 rounded" style="border-left: 4px solid {{ $track->plan_color ?? '#06d6a0' }} !important;">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     @if($track->is_public)
                                         <span class="badge bg-success text-dark uppercase">
@@ -32,10 +32,11 @@
                                     {{ ucfirst((string)$track->difficulty->value) }}
                                 </span>
                                 </div>
-                                <h5 class="plan-title">{{ $track->title }}</h5>
+                                <h5 class="plan-title" style="color: {{ $track->plan_color ?? '#06d6a0' }};">{{ $track->title }}</h5>
                                 <p class="text-muted small mb-0">
                                     {{ Str::limit($track->description, 60) }}
                                 </p>
+                                
                             </div>
                         </div>
                     </a>
