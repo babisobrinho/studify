@@ -25,23 +25,23 @@
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="title" class="form-label">Título do Curso</label>
+                            <label for="title" class="form-label">Título do Curso*</label>
                             <input type="text" class="form-control @error('title') is-invalid @enderror" 
                                    id="title" name="title" 
-                                   placeholder="Ex: Curso de Front-End" 
+                                   placeholder="Ex: Curso de Laravel Avançado" 
                                    value="{{ old('title') }}" required />
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="user_id" class="form-label">Criador</label>
+                            <label for="user_id" class="form-label">Instrutor*</label>
                             <select class="form-select @error('user_id') is-invalid @enderror" 
                                     id="user_id" name="user_id" required>
-                                <option value="" disabled selected>Selecione o criador</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                        {{ $user->name }} ({{ $user->username }})
+                                <option value="" disabled selected>Selecione o instrutor</option>
+                                @foreach($instructors as $instructor)
+                                    <option value="{{ $instructor->id }}" {{ old('user_id') == $instructor->id ? 'selected' : '' }}>
+                                        {{ $instructor->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -53,18 +53,19 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="slug" class="form-label">Slug (URL amigável)</label>
+                            <label for="slug" class="form-label">Slug (URL)*</label>
                             <input type="text" class="form-control @error('slug') is-invalid @enderror" 
                                    id="slug" name="slug" 
-                                   placeholder="Ex: curso-frontend" 
+                                   placeholder="Ex: curso-laravel-avancado" 
                                    value="{{ old('slug') }}" required />
                             @error('slug')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <small class="text-muted">URL amigável para o curso (auto-gerado)</small>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Tags</label>
-                            <select class="form-select @error('tags') is-invalid @enderror" 
+                            <label for="tags" class="form-label">Tags</label>
+                            <select class="form-select select2 @error('tags') is-invalid @enderror" 
                                     id="tags" name="tags[]" multiple>
                                 @foreach($tags as $tag)
                                     <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
@@ -79,19 +80,30 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">Descrição</label>
+                        <label for="description" class="form-label">Descrição Curta*</label>
                         <textarea class="form-control @error('description') is-invalid @enderror" 
                                   id="description" name="description" 
-                                  rows="3" placeholder="Descrição detalhada do curso..." 
-                                  required>{{ old('description') }}</textarea>
+                                  rows="2" required>{{ old('description') }}</textarea>
                         @error('description')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                        <small class="text-muted">Uma breve descrição que aparecerá na listagem (máx. 255 caracteres)</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="about" class="form-label">Sobre o Curso</label>
+                        <textarea class="form-control @error('about') is-invalid @enderror" 
+                                  id="about" name="about" 
+                                  rows="4">{{ old('about') }}</textarea>
+                        @error('about')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="text-muted">Descrição detalhada do curso</small>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-4">
-                            <label class="form-label">Nível de Dificuldade</label>
+                            <label for="difficulty" class="form-label">Nível de Dificuldade*</label>
                             <select class="form-select @error('difficulty') is-invalid @enderror" 
                                     id="difficulty" name="difficulty" required>
                                 <option value="beginner" {{ old('difficulty', 'beginner') == 'beginner' ? 'selected' : '' }}>Iniciante</option>
@@ -109,6 +121,9 @@
                                        {{ old('is_official') ? 'checked' : '' }} />
                                 <label class="form-check-label" for="is_official">Curso Oficial</label>
                             </div>
+                            @error('is_official')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-4">
                             <div class="form-check form-switch pt-4">
@@ -117,6 +132,9 @@
                                        {{ old('is_public', true) ? 'checked' : '' }} />
                                 <label class="form-check-label" for="is_public">Curso Público</label>
                             </div>
+                            @error('is_public')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -144,16 +162,26 @@
         </div>
     </div>
 
-    <script>
-        // Geração automática do slug baseado no título
-        document.getElementById('title').addEventListener('input', function() {
-            const title = this.value;
-            const slug = title.toLowerCase()
-                .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
-                .replace(/[\s_-]+/g, '-') // Substitui espaços e underscores por hífens
-                .replace(/^-+|-+$/g, ''); // Remove hífens extras no início/fim
-            
-            document.getElementById('slug').value = slug;
-        });
-    </script>
+    @push('scripts')
+        <script>
+            // Geração automática do slug baseado no título
+            document.getElementById('title').addEventListener('input', function() {
+                const title = this.value;
+                const slug = title.toLowerCase()
+                    .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+                    .replace(/[\s_-]+/g, '-') // Substitui espaços e underscores por hífens
+                    .replace(/^-+|-+$/g, ''); // Remove hífens extras no início/fim
+                
+                document.getElementById('slug').value = slug;
+            });
+
+            // Inicializa o select2 para tags
+            $(document).ready(function() {
+                $('#tags').select2({
+                    placeholder: "Selecione as tags",
+                    allowClear: true
+                });
+            });
+        </script>
+    @endpush
 @endsection

@@ -22,13 +22,13 @@
             <div class="col-md-3">
               <label class="form-label">Dificuldade</label>
               <select name="difficulty" class="form-select">
-    <option value="">Todas</option>
-    @foreach(\App\Enums\DifficultyEnum::cases() as $case)
-        <option value="{{ $case->value }}" {{ request('difficulty') === $case->value ? 'selected' : '' }}>
-            {{ $case->label() }}
-        </option>
-    @endforeach
-</select>
+                <option value="">Todas</option>
+                @foreach(\App\Enums\DifficultyEnum::cases() as $case)
+                  <option value="{{ $case->value }}" {{ request('difficulty') == $case->value ? 'selected' : '' }}>
+                    {{ $case->label() }}
+                  </option>
+                @endforeach
+              </select>
             </div>
             <div class="col-md-3">
               <label class="form-label">Visibilidade</label>
@@ -94,24 +94,21 @@
                     <code>{{ $track->slug }}</code>
                   </td>
                   <td>
-    @php
-        $difficultyClasses = [
-            'beginner' => 'bg-success',
-            'intermediate' => 'bg-warning',
-            'advanced' => 'bg-danger'
-        ];
-        
-        // Obter o valor string do Enum
-        $difficultyValue = $track->difficulty instanceof \App\Enums\DifficultyEnum 
-            ? $track->difficulty->value 
-            : strtolower($track->difficulty);
-        
-        $badgeClass = $difficultyClasses[$difficultyValue] ?? 'bg-secondary';
-    @endphp
-    <span class="badge {{ $badgeClass }}">
-        {{ $track->difficulty instanceof \App\Enums\DifficultyEnum ? $track->difficulty->label() : ucfirst($difficultyValue) }}
-    </span>
-</td>
+                    @php
+                      $difficultyClasses = [
+                        'beginner' => 'bg-success',
+                        'intermediate' => 'bg-warning',
+                        'advanced' => 'bg-danger'
+                      ];
+                      $difficultyValue = $track->difficulty instanceof \App\Enums\DifficultyEnum 
+                        ? $track->difficulty->value 
+                        : strtolower($track->difficulty);
+                      $badgeClass = $difficultyClasses[$difficultyValue] ?? 'bg-secondary';
+                    @endphp
+                    <span class="badge {{ $badgeClass }}">
+                      {{ $track->difficulty instanceof \App\Enums\DifficultyEnum ? $track->difficulty->label() : ucfirst($difficultyValue) }}
+                    </span>
+                  </td>
                   <td>
                     <span class="badge {{ $track->is_public ? 'bg-primary' : 'bg-secondary' }}">
                       {{ $track->is_public ? 'Público' : 'Privado' }}
@@ -145,7 +142,7 @@
           </table>
         </div>
 
-        <!-- Paginação Melhorada -->
+        <!-- Paginação -->
         @if($tracks->hasPages())
           <nav class="mt-4" aria-label="Paginação">
             <ul class="pagination justify-content-center flex-wrap">

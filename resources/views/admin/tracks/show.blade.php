@@ -26,8 +26,9 @@
                         <img src="{{ asset('storage/' . $track->cover_image) }}" 
                              class="img-fluid rounded mb-3" alt="Capa do curso {{ $track->title }}">
                     @else
-                        <img src="https://cdn-icons-png.flaticon.com/512/1448/1448776.png"
-                             class="img-fluid rounded mb-3" alt="Curso sem imagem">
+                        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
+                            <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
+                        </div>
                     @endif
                     
                     <div class="d-grid gap-2">
@@ -37,6 +38,24 @@
                         <span class="badge bg-{{ $track->is_public ? 'primary' : 'warning' }} mb-2">
                             {{ $track->is_public ? 'Público' : 'Privado' }}
                         </span>
+                        <span class="badge bg-{{ 
+                            $track->difficulty == 'beginner' ? 'success' : 
+                            ($track->difficulty == 'intermediate' ? 'warning' : 'danger') 
+                        }}">
+                            {{ 
+                                $track->difficulty == 'beginner' ? 'Iniciante' : 
+                                ($track->difficulty == 'intermediate' ? 'Intermediário' : 'Avançado') 
+                            }}
+                        </span>
+                        
+                        @if($track->tags->count() > 0)
+                            <div class="mt-3">
+                                <h6 class="text-dark"><i class="bi bi-tags"></i> Tags</h6>
+                                @foreach($track->tags as $tag)
+                                    <span class="badge bg-info me-1">{{ $tag->name }}</span>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -51,20 +70,6 @@
                         @else
                             <span class="text-muted">Sem avaliações ainda</span>
                         @endif
-                        
-                        <span class="badge bg-{{ 
-                            $track->difficulty == 'beginner' ? 'success' : 
-                            ($track->difficulty == 'intermediate' ? 'warning' : 'danger') 
-                        }} ms-2">
-                            {{ 
-                                $track->difficulty == 'beginner' ? 'Iniciante' : 
-                                ($track->difficulty == 'intermediate' ? 'Intermediário' : 'Avançado') 
-                            }}
-                        </span>
-                        
-                        @foreach($track->tags as $tag)
-                            <span class="badge bg-info ms-2">{{ $tag->name }}</span>
-                        @endforeach
                     </div>
                     
                     <p class="lead text-secondary">{{ $track->description }}</p>
