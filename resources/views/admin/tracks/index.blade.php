@@ -7,10 +7,14 @@
   @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
   <div class="container my-4 my-md-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="fw-bold"><i class="bi bi-book me-2"></i>Lista de Cursos</h1>
-      <a href="{{ route('admin.tracks.create') }}" class="btn btn-outline-success rounded-pill">
+    <div class="d-flex justify-content-between align-items-right mb-3">
+      <h1 class="fw-bold"><i class="bi bi-book me-2"></i>Lista de Cursos</h1></div>
+      <div class="d-flex justify-content-end gap-3 mb-3">
+      <a href="{{ route('admin.tracks.create') }}" class="btn btn-success rounded-pill btn-lg text-teal ">
         <i class="bi bi-plus-circle me-1"></i> Adicionar Curso
+      </a>
+      <a href="{{ route('home') }}" class="btn btn-dark rounded-pill btn-lg text-teal ">
+        <i class="bi bi-house me-1"></i> 
       </a>
     </div>
 
@@ -96,9 +100,9 @@
                   <td>
                     @php
                       $difficultyClasses = [
-                        'beginner' => 'bg-success',
-                        'intermediate' => 'bg-warning',
-                        'advanced' => 'bg-danger'
+                        'beginner' => 'bg-secondary',
+                        'intermediate' => 'bg-secondary',
+                        'advanced' => 'bg-secondary'
                       ];
                       $difficultyValue = $track->difficulty instanceof \App\Enums\DifficultyEnum 
                         ? $track->difficulty->value 
@@ -115,16 +119,16 @@
                     </span>
                   </td>
                   <td>
-                    <span class="badge {{ $track->is_official ? 'bg-info' : 'bg-light text-dark' }}">
+                    <span class="badge {{ $track->is_official ? 'bg-info' : 'bg-primary text-dark' }}">
                       {{ $track->is_official ? 'Oficial' : 'Comunitário' }}
                     </span>
                   </td>
                   <td>
                     <div class="d-flex gap-2">
-                      <a href="{{ route('admin.tracks.show', $track->id) }}" class="btn btn-outline-primary btn-sm rounded shadow-sm" title="Visualizar">
+                      <a href="{{ route('admin.tracks.show', $track->id) }}" class="btn btn-primary btn-sm rounded shadow-sm" title="Visualizar">
                         <i class="bi bi-eye"></i>
                       </a>
-                      <a href="{{ route('admin.tracks.edit', $track->id) }}" class="btn btn-outline-success btn-sm rounded shadow-sm" title="Editar">
+                      <a href="{{ route('admin.tracks.edit', $track->id) }}" class="btn btn-success btn-sm rounded shadow-sm" title="Editar">
                         <i class="bi bi-pencil"></i>
                       </a>
                       <button class="btn btn-outline-danger btn-sm rounded shadow-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $track->id }}" data-title="{{ $track->title }}" title="Excluir">

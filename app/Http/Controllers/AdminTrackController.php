@@ -46,20 +46,20 @@ public function index()
      * Show the form for creating a new track.
      */
     public function create()
-    {
-        $users = User::whereHas('roles', function($query) {
-            $query->whereIn('name', ['admin', 'curator']);
-        })->get();
+{
+    $instructors = User::whereHas('roles', function($query) {
+        $query->whereIn('name', ['admin', 'curator']);
+    })->get();
 
-        $tags = Tag::all();
-        $difficultyLevels = [
-            'beginner' => 'Iniciante',
-            'intermediate' => 'Intermediário', 
-            'advanced' => 'Avançado'
-        ];
+    $tags = Tag::all();
+    $difficultyLevels = [
+        'beginner' => 'Iniciante',
+        'intermediate' => 'Intermediário', 
+        'advanced' => 'Avançado'
+    ];
 
-        return view('admin.tracks.create', compact('users', 'tags', 'difficultyLevels'));
-    }
+    return view('admin.tracks.create', compact('instructors', 'tags', 'difficultyLevels'));
+}
 
     /**
      * Store a newly created track in storage.
