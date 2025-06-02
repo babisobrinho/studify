@@ -38,8 +38,8 @@
         <form action="{{ route('admin.tracks.index') }}" method="GET">
           <div class="row g-3">
             <div class="col-md-3">
-              <label class="form-label small text-uppercase fw-bold text-muted">Dificuldade</label>
-              <select name="difficulty" class="form-select form-select-sm">
+              <label class="form-label small text-uppercase fw-bold text-muted border-0">Dificuldade</label>
+              <select name="difficulty" class="form-select  border-0 form-select-sm">
                 <option value="">Todas</option>
                 @foreach(\App\Enums\DifficultyEnum::cases() as $case)
                   <option value="{{ $case->value }}" {{ request('difficulty') == $case->value ? 'selected' : '' }}>
@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-3">
               <label class="form-label small text-uppercase fw-bold text-muted">Visibilidade</label>
-              <select name="is_public" class="form-select form-select-sm">
+              <select name="is_public" class="form-select border-0 form-select-sm">
                 <option value="">Todas</option>
                 <option value="1" {{ request('is_public') === '1' ? 'selected' : '' }}>Público</option>
                 <option value="0" {{ request('is_public') === '0' ? 'selected' : '' }}>Privado</option>
@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-3">
               <label class="form-label small text-uppercase fw-bold text-muted">Tipo</label>
-              <select name="is_official" class="form-select form-select-sm">
+              <select name="is_official" class="form-select border-0 form-select-sm">
                 <option value="">Todos</option>
                 <option value="1" {{ request('is_official') === '1' ? 'selected' : '' }}>Oficial</option>
                 <option value="0" {{ request('is_official') === '0' ? 'selected' : '' }}>Comunitário</option>
@@ -68,7 +68,7 @@
               <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
                 <i class="bi bi-funnel me-1"></i> Aplicar
               </button>
-              <a href="{{ route('admin.tracks.index') }}" class="btn btn-sm btn-outline-secondary">
+              <a href="{{ route('admin.tracks.index') }}" class="btn btn-sm btn-secondary">
                 <i class="bi bi-arrow-counterclockwise"></i>
               </a>
             </div>
@@ -218,7 +218,7 @@
                   @endforeach
                   
                   <label for="perPage" class="small text-muted me-2 mb-0">Itens por página:</label>
-                  <select name="perPage" id="perPage" class="form-select form-select-sm" style="width: 80px;" onchange="this.form.submit()">
+                  <select name="perPage" id="perPage" class="form-select  border-0 form-select-sm" style="width: 80px;" onchange="this.form.submit()">
                     <option value="10" {{ request('perPage', 10) == 10 ? 'selected' : '' }}>10</option>
                     <option value="25" {{ request('perPage', 10) == 25 ? 'selected' : '' }}>25</option>
                     <option value="50" {{ request('perPage', 10) == 50 ? 'selected' : '' }}>50</option>
@@ -227,17 +227,17 @@
                 </form>
                 
                 <!-- Pagination links -->
-                <nav aria-label="Page navigation">
-                  <ul class="pagination pagination-sm mb-0">
+                <nav aria-label="Page navigation ">
+                  <ul class="pagination pagination-sm  border-0 mb-0">
                     {{-- Previous Page Link --}}
                     @if($tracks->onFirstPage())
-                      <li class="page-item disabled">
-                        <span class="page-link"><i class="bi bi-chevron-left"></i></span>
+                      <li class="page-item disabled border-0">
+                        <span class="page-link border-0"><i class="bi bi-chevron-left border-0"></i></span>
                       </li>
                     @else
-                      <li class="page-item">
-                        <a class="page-link" href="{{ $tracks->previousPageUrl() }}" aria-label="Previous">
-                          <i class="bi bi-chevron-left"></i>
+                      <li class="page-item border-0">
+                        <a class="page-link border-0" href="{{ $tracks->previousPageUrl() }}" aria-label="Previous">
+                          <i class="bi bi-chevron-left border-0"></i>
                         </a>
                       </li>
                     @endif
@@ -245,26 +245,26 @@
                     {{-- Pagination Elements --}}
                     @foreach($tracks->getUrlRange(1, $tracks->lastPage()) as $page => $url)
                       @if($page == $tracks->currentPage())
-                        <li class="page-item active" aria-current="page">
-                          <span class="page-link">{{ $page }}</span>
+                        <li class="page-item active border-0" aria-current="page">
+                          <span class="page-link border-0">{{ $page }}</span>
                         </li>
                       @else
-                        <li class="page-item">
-                          <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                        <li class="page-item border-0">
+                          <a class="page-link border-0" href="{{ $url }}">{{ $page }}</a>
                         </li>
                       @endif
                     @endforeach
 
                     {{-- Next Page Link --}}
                     @if($tracks->hasMorePages())
-                      <li class="page-item">
-                        <a class="page-link" href="{{ $tracks->nextPageUrl() }}" aria-label="Next">
+                      <li class="page-item border-0">
+                        <a class="page-link border-0" href="{{ $tracks->nextPageUrl() }}" aria-label="Next">
                           <i class="bi bi-chevron-right"></i>
                         </a>
                       </li>
                     @else
                       <li class="page-item disabled">
-                        <span class="page-link"><i class="bi bi-chevron-right"></i></span>
+                        <span class="page-link border-0"><i class="bi bi-chevron-right"></i></span>
                       </li>
                     @endif
                   </ul>

@@ -37,10 +37,10 @@
                     @method('PUT')
                     
                     <!-- Basic Information Section -->
-                    <div class="row mb-4">
-                        <div class="col-md-6 mb-3">
-                            <label for="title" class="form-label fw-semibold">Nome do Curso*</label>
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" 
+                    <div class="row mb-4 ">
+                        <div class="col-md-6 mb-3 ">
+                            <label for="title" class="form-label fw-semibold border-0">Nome do Curso*</label>
+                            <input type="text" class="form-control border-0 @error('title') is-invalid @enderror" 
                                    id="title" name="title" 
                                    value="{{ old('title', $track->title) }}" required />
                             @error('title')
@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="user_id" class="form-label fw-semibold">Instrutor*</label>
-                            <select class="form-select @error('user_id') is-invalid @enderror" 
+                            <select class="form-select border-0 @error('user_id') is-invalid @enderror" 
                                     id="user_id" name="user_id" required>
                                 @foreach($instructors as $instructor)
                                     <option value="{{ $instructor->id }}" {{ old('user_id', $track->user_id) == $instructor->id ? 'selected' : '' }}>
@@ -68,8 +68,8 @@
                         <div class="col-md-6 mb-3">
                             <label for="slug" class="form-label fw-semibold">Slug (URL)*</label>
                             <div class="input-group">
-                                <span class="input-group-text">/cursos/</span>
-                                <input type="text" class="form-control @error('slug') is-invalid @enderror" 
+                                <span class="input-group-text border-0">/cursos/</span>
+                                <input type="text" class="form-control border-0 @error('slug') is-invalid @enderror" 
                                        id="slug" name="slug" 
                                        value="{{ old('slug', $track->slug) }}" required />
                                 @error('slug')
@@ -78,8 +78,8 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="tags" class="form-label fw-semibold">Tags</label>
-                            <select class="form-select select2 @error('tags') is-invalid @enderror" 
+                            <label for="tags" class="form-label fw-semibold border-0">Tags</label>
+                            <select class="form-select border-0 select2 @error('tags') is-invalid @enderror" 
                                     id="tags" name="tags[]" multiple="multiple">
                                 @foreach($tags as $tag)
                                     <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', $track->tags->pluck('id')->toArray())) ? 'selected' : '' }}>
@@ -95,8 +95,8 @@
 
                     <!-- Description Section -->
                     <div class="mb-4">
-                        <label for="description" class="form-label fw-semibold">Descrição Curta*</label>
-                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                        <label for="description" class="form-label fw-semibold border-0">Descrição Curta*</label>
+                        <textarea class="form-control border-0 @error('description') is-invalid @enderror" 
                                   id="description" name="description" 
                                   rows="3" required>{{ old('description', $track->description) }}</textarea>
                         <div class="form-text">Uma breve descrição que aparecerá nos cards do curso.</div>
@@ -108,7 +108,7 @@
                     <!-- About Section -->
                     <div class="mb-4">
                         <label for="about" class="form-label fw-semibold">Sobre o Curso</label>
-                        <textarea class="form-control @error('about') is-invalid @enderror" 
+                        <textarea class="form-control  border-0 @error('about') is-invalid @enderror" 
                                   id="about" name="about" 
                                   rows="5">{{ old('about', $track->about) }}</textarea>
                         <div class="form-text">Descrição detalhada que aparecerá na página do curso.</div>
@@ -121,7 +121,7 @@
                     <div class="row mb-4">
                         <div class="col-md-4 mb-3">
                             <label for="difficulty" class="form-label fw-semibold">Nível*</label>
-                            <select class="form-select @error('difficulty') is-invalid @enderror" 
+                            <select class="form-select border-0 @error('difficulty') is-invalid @enderror" 
                                     id="difficulty" name="difficulty" required>
                                 <option value="beginner" {{ old('difficulty', $track->difficulty) == 'beginner' ? 'selected' : '' }}>Iniciante</option>
                                 <option value="intermediate" {{ old('difficulty', $track->difficulty) == 'intermediate' ? 'selected' : '' }}>Intermediário</option>
@@ -133,7 +133,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="form-check form-switch pt-4">
-                                <input class="form-check-input" type="checkbox" role="switch"
+                                <input class="form-check-input border-0" type="checkbox" role="switch"
                                        id="is_official" name="is_official" 
                                        {{ old('is_official', $track->is_official) ? 'checked' : '' }} />
                                 <label class="form-check-label fw-semibold" for="is_official">Curso Oficial</label>
@@ -144,7 +144,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="form-check form-switch pt-4">
-                                <input class="form-check-input" type="checkbox" role="switch"
+                                <input class="form-check-input " type="checkbox" role="switch"
                                        id="is_public" name="is_public" 
                                        {{ old('is_public', $track->is_public) ? 'checked' : '' }} />
                                 <label class="form-check-label fw-semibold" for="is_public">Curso Público</label>
@@ -157,8 +157,8 @@
 
                     <!-- Cover Image Section -->
                     <div class="mb-4">
-                        <label for="cover_image" class="form-label fw-semibold">Imagem do Curso</label>
-                        <input type="file" class="form-control @error('cover_image') is-invalid @enderror" 
+                        <label for="cover_image" class="form-label border-0 fw-semibold">Imagem do Curso</label>
+                        <input type="file" class="form-control border-0 @error('cover_image') is-invalid @enderror" 
                             id="cover_image" name="cover_image" 
                             accept="image/*" />
                         <div class="form-text">Imagem de capa recomendada: 800x450 pixels.</div>
@@ -168,10 +168,10 @@
                         @if($track->cover_image)
                             <div class="mt-3">
                                 <div class="d-flex align-items-center gap-3">
-                                    <img src="{{ Storage::url($track->cover_image) }}" alt="Capa atual" style="max-height: 120px;" class="img-thumbnail">
+                                    <img src="{{ Storage::url($track->cover_image) }}" alt="Capa atual" style="max-height: 120px; border: none;" class="img-thumbnail">
                                     <div>
                                         <small class="d-block text-muted">Imagem atual</small>
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-1" id="removeImageBtn">
+                                        <button type="button" class="btn btn-sm btn-outline-danger mt-1 " id="removeImageBtn">
                                             <i class="bi bi-trash"></i> Remover Imagem
                                         </button>
                                         <input type="hidden" name="remove_image" id="removeImageInput" value="0">
@@ -183,7 +183,7 @@
 
                     <!-- Form Actions -->
                     <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <i class="bi bi-trash me-1"></i> Excluir Curso
                         </button>
                         <div class="d-flex gap-2">
@@ -238,22 +238,28 @@
             .card-header {
                 padding: 1rem 1.5rem;
                 border-bottom: 1px solid rgba(0,0,0,.05);
+                
             }
             .form-label {
                 font-weight: 500;
                 color: #495057;
+               
             }
+           
             .form-switch .form-check-input {
                 width: 2.5em;
                 height: 1.5em;
+                border: none;
             }
             .select2-container--default .select2-selection--multiple {
                 min-height: 38px;
                 border: 1px solid #ced4da;
+                border: none;
             }
             .select2-container--default .select2-selection--multiple .select2-selection__choice {
                 background-color: #e9ecef;
                 border: 1px solid #ced4da;
+                border: none;
             }
         </style>
     @endpush

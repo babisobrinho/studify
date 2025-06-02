@@ -9,7 +9,7 @@
     
     <div class="container-fluid px-4 px-lg-5 py-4">
         <!-- Header Section -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4 border-0">
             <div class="d-flex align-items-center">
                 <i class="bi bi-plus-circle fs-1 text-primary me-3"></i>
                 <div>
@@ -19,7 +19,7 @@
             </div>
             <div>
                 <a href="{{ route('admin.tracks.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i> Voltar para Lista
+                    <i class="bi bi-arrow-left me-1 "></i> Voltar para Lista
                 </a>
             </div>
         </div>
@@ -38,8 +38,8 @@
                     <!-- Basic Information Section -->
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3">
-                            <label for="title" class="form-label fw-semibold">Nome do Curso*</label>
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" 
+                            <label for="title" class="form-label fw-semibold border-0">Nome do Curso*</label>
+                            <input type="text" class="form-control border-0 @error('title') is-invalid @enderror" 
                                    id="title" name="title" 
                                    placeholder="Ex: Curso de Laravel Avançado"
                                    value="{{ old('title') }}" required />
@@ -48,8 +48,8 @@
                             @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="user_id" class="form-label fw-semibold">Instrutor*</label>
-                            <select class="form-select @error('user_id') is-invalid @enderror" 
+                            <label for="user_id" class="form-label border-0 fw-semibold">Instrutor*</label>
+                            <select class="form-select border-0 @error('user_id') is-invalid @enderror" 
                                     id="user_id" name="user_id" required>
                                 <option value="" disabled selected>Selecione o instrutor</option>
                                 @foreach($instructors as $instructor)
@@ -66,11 +66,11 @@
 
                     <!-- Slug and Tags Section -->
                     <div class="row mb-4">
-                        <div class="col-md-6 mb-3">
-                            <label for="slug" class="form-label fw-semibold">Slug (URL)*</label>
+                        <div class="col-md-6 mb-3 border-0">
+                            <label for="slug" class="form-label border-0 fw-semibold">Slug (URL)*</label>
                             <div class="input-group">
-                                <span class="input-group-text">/cursos/</span>
-                                <input type="text" class="form-control @error('slug') is-invalid @enderror" 
+                                <span class="input-group-text border-0">/cursos/</span>
+                                <input type="text" class="form-control border-0 @error('slug') is-invalid @enderror" 
                                        id="slug" name="slug" 
                                        placeholder="Ex: curso-laravel-avancado"
                                        value="{{ old('slug') }}" required />
@@ -82,7 +82,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="tags" class="form-label fw-semibold">Tags</label>
-                            <select class="form-select select2 @error('tags') is-invalid @enderror" 
+                            <select class="form-select select2 border-0 @error('tags') is-invalid @enderror" 
                                     id="tags" name="tags[]" multiple="multiple">
                                 @foreach($tags as $tag)
                                     <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
@@ -99,7 +99,7 @@
                     <!-- Description Section -->
                     <div class="mb-4">
                         <label for="description" class="form-label fw-semibold">Descrição Curta*</label>
-                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                        <textarea class="form-control border-0 @error('description') is-invalid @enderror" 
                                   id="description" name="description" 
                                   rows="3" required>{{ old('description') }}</textarea>
                         <div class="form-text">Uma breve descrição que aparecerá nos cards do curso (máx. 255 caracteres).</div>
@@ -111,7 +111,7 @@
                     <!-- About Section -->
                     <div class="mb-4">
                         <label for="about" class="form-label fw-semibold">Sobre o Curso</label>
-                        <textarea class="form-control @error('about') is-invalid @enderror" 
+                        <textarea class="form-control border-0 @error('about') is-invalid @enderror" 
                                   id="about" name="about" 
                                   rows="5">{{ old('about') }}</textarea>
                         <div class="form-text">Descrição detalhada que aparecerá na página do curso.</div>
@@ -124,7 +124,7 @@
                     <div class="row mb-4">
                         <div class="col-md-4 mb-3">
                             <label for="difficulty" class="form-label fw-semibold">Nível*</label>
-                            <select class="form-select @error('difficulty') is-invalid @enderror" 
+                            <select class="form-select border-0 @error('difficulty') is-invalid @enderror" 
                                     id="difficulty" name="difficulty" required>
                                 <option value="beginner" {{ old('difficulty', 'beginner') == 'beginner' ? 'selected' : '' }}>Iniciante</option>
                                 <option value="intermediate" {{ old('difficulty') == 'intermediate' ? 'selected' : '' }}>Intermediário</option>
@@ -135,8 +135,8 @@
                             @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                            <div class="form-check form-switch pt-4">
-                                <input class="form-check-input" type="checkbox" role="switch"
+                            <div class="form-check border-0 form-switch pt-4">
+                                <input class="form-check-input border-0" type="checkbox" role="switch"
                                        id="is_official" name="is_official" 
                                        {{ old('is_official') ? 'checked' : '' }} />
                                 <label class="form-check-label fw-semibold" for="is_official">Curso Oficial</label>
@@ -161,7 +161,7 @@
                     <!-- Cover Image Section -->
                     <div class="mb-4">
                         <label for="cover_image" class="form-label fw-semibold">Imagem do Curso</label>
-                        <input type="file" class="form-control @error('cover_image') is-invalid @enderror" 
+                        <input type="file" class="form-control border-0 @error('cover_image') is-invalid @enderror" 
                             id="cover_image" name="cover_image" 
                             accept="image/*" />
                         <div class="form-text">Imagem de capa recomendada: 800x450 pixels, formatos JPEG ou PNG.</div>
