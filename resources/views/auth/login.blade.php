@@ -38,6 +38,7 @@
                                         <input id="password" type="password"
                                             class="form-control @error('password') is-invalid @enderror border-0 rounded-pill pe-5"
                                             name="password" placeholder="Palavra-passe" required autocomplete="current-password">
+
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -78,3 +79,19 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.querySelector('.toggle-password').addEventListener('click', function () {
+        const input = document.getElementById(this.dataset.target);
+        const iconShow = this.querySelector('.icon-show-password');
+        const iconHide = this.querySelector('.icon-hide-password');
+
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+
+        iconShow.classList.toggle('d-none', !isHidden);
+        iconHide.classList.toggle('d-none', isHidden);
+    });
+</script>
+@endpush
