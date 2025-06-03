@@ -124,12 +124,27 @@ class TrackController extends Controller
             ->orderBy('position')
             ->get();
 
-        // Carregar as tags associadas a este track
-        $tags = DB::table('track_tags')
+        // Carregar as tags associadas a este track (com filtro rigoroso)
+        $tagsQuery = DB::table('track_tags')
             ->join('tags', 'track_tags.tag_id', '=', 'tags.id')
             ->where('track_tags.track_id', $track->id)
-            ->select('tags.*')
-            ->get();
+            ->select('tags.*');
+
+// Obter os resultados como array para manipulação
+        $tagsArray = $tagsQuery->get()->toArray();
+
+// Filtrar manualmente para remover qualquer tag com nome vazio ou nulo
+        $filteredTags = [];
+        foreach ($tagsArray as $tag) {
+            if (isset($tag->name) && !empty($tag->name) && trim($tag->name) !== '') {
+                $filteredTags[] = $tag;
+            }
+        }
+
+// Converter de volta para collection
+        $tags = collect($filteredTags);
+
+
 
         // Carregar a categoria do track
         $category = null;
