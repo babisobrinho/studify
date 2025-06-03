@@ -21,25 +21,24 @@
         background-image: url('laptop.png');
         background-attachment: fixed;
         width: 100%;
-        min-height: 50vh;
+        min-height: 45vh;
         background-size: cover;
         background-position: center;
         position: relative;
     }
     
-    .parallax2, .parallax3 {
+    .parallax2 {
         background-image: url('t.png');
         background-attachment: fixed;
         width: 100%;
-        min-height: 50vh;
+        height: 59vh;
         background-size: cover;
         background-position: center;
         position: relative;
     }
     
     .parallax1::before, 
-    .parallax2::before, 
-    .parallax3::before {
+    .parallax2::before {
         content: "";
         position: absolute;
         top: 0;
@@ -51,21 +50,21 @@
     
     /* Ajustes para dispositivos móveis */
     @media (max-width: 768px) {
-        .parallax1, .parallax2, .parallax3 {
+        .parallax1, .parallax2 {
             background-attachment: scroll;
-            min-height: 30vh;
+            height: 80vh;
         }
         
         .parallax1 {
             min-height: 25vh;
         }
     
-    /* Dispositivos móveis - desativa o efeito parallax mas mantém a seção visível */
+   
  
         .parallax1 {
             background-image: url('laptop.png') !important;
         }
-        .parallax2, .parallax3 {
+        .parallax2 {
             background-image: url('t.png') !important;
         }
     }
@@ -171,12 +170,12 @@
     .tech-logo-wrapper:nth-child(6):before { background:rgb(220, 218, 201); } /* JavaScript */
     
     /* Backend colors */
-    .backend-tech:nth-child(1):before { background:rgb(240, 222, 222); } /* Node.js */
-    .backend-tech:nth-child(2):before { background:rgb(205, 218, 229); } /* Python */
-    .backend-tech:nth-child(3):before { background:rgb(211, 224, 228); } /* Java */
-    .backend-tech:nth-child(4):before { background:rgb(210, 231, 210); } /* C# */
-    .backend-tech:nth-child(5):before { background:rgb(200, 213, 224); } /* MySQL */
-    .backend-tech:nth-child(6):before { background:rgb(229, 216, 216); } /* Laravel */
+    .tech-logo-wrapper:nth-child(7):before { background:rgb(240, 222, 222); } /* Node.js */
+    .tech-logo-wrapper:nth-child(8):before { background:rgb(205, 218, 229); } /* Python */
+    .tech-logo-wrapper:nth-child(9):before { background:rgb(211, 224, 228); } /* Java */
+    .tech-logo-wrapper:nth-child(10):before { background:rgb(210, 231, 210); } /* C# */
+    .tech-logo-wrapper:nth-child(11):before { background:rgb(200, 213, 224); } /* MySQL */
+    .tech-logo-wrapper:nth-child(12):before { background:rgb(229, 216, 216); } /* Laravel */
 
     /* Estilo para os labels */
     .tech-logo-label {
@@ -238,7 +237,15 @@
         .lead {
             font-size: 1.1rem !important;
         }
+           .parallax1, .parallax2 {
+            height: 80vh;
+        }
+        
+        .parallax1 {
+            min-height: 25vh;
+        }
     }
+    
     
     @media (max-width: 768px) {
         .about-header {
@@ -423,15 +430,32 @@
                 padding-right: 2rem;
             }
         }
-    
+    @media (max-width: 442px) {
+        .display-3 {
+            font-size: 2.5rem !important;
+        }
+        
+        .lead {
+            font-size: 1.1rem !important;
+        }
+        .parallax1 {
+            height: 30vh;
+        }
+        .parallax2 {
+            height: 110vh;
+        }
+        .parallax1 {
+            min-height: 25vh;
+        }
+    }
 
     }
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Aplica efeito parallax apenas se não for mobile
+    // Aplica efeito parallax
     if (window.innerWidth > 768) {
-        const parallaxSections = document.querySelectorAll('.parallax1, .parallax2, .parallax3');
+        const parallaxSections = document.querySelectorAll('.parallax1, .parallax2');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -442,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
         parallaxSections.forEach(section => observer.observe(section));
     } else {
         // Para mobile, apenas mostra as seções sem animação
-        document.querySelectorAll('.parallax1, .parallax2, .parallax3').forEach(section => {
+        document.querySelectorAll('.parallax1, .parallax2').forEach(section => {
             section.classList.add('visible');
         });
     }
@@ -628,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<div class="parallax1"></div>
+
 
 {{-- Seção Missão --}}
 <div class="row justify-content-center align-items-center g-0 g-md-4 m-0 m-md-5 p-3 p-md-5">
@@ -657,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <div class="m-0 m-md-5 p-3 p-md-5">
-    <h2 class="text-center mb-4 mb-md-5 fw-bold text-dark">Nosso Impacto</h2>
+    <h2 class="text-center mb-4 mb-md-5 fs-1 fw-bold text-primary">Nosso Impacto</h2>
     <div class="row g-2 g-md-4">
         <div class="col-6 col-md-3">
             <div class="bg-primary text-dark rounded-4 p-2 p-md-3 text-center">
@@ -690,53 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- Front-end Technologies Section -->
-<div class="parallax2">
-    <div class="container py-4 py-md-5">
-        <div class="row justify-content-center">
-            <div class="col-12 text-center">
-                <div class="bg-white-transparent p-3 p-md-4 rounded-4 shadow-lg d-inline-block mb-3 mb-md-4">
-                    <h2 class="mb-0 fw-bold text-primary">Tecnologias Front-end que dominamos</h2>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white-transparent p-3 p-md-5 rounded-4 shadow-lg">
-            <div class="tech-logos-container">
-                <!-- React -->
-                <a class="tech-logo-wrapper">
-                    <iconify-icon icon="logos:react" class="tech-logo"></iconify-icon>
-                    <div class="tech-logo-label">React</div>
-                </a>
-                <!-- Vue -->
-                <a class="tech-logo-wrapper">
-                    <iconify-icon icon="logos:vue" class="tech-logo"></iconify-icon>
-                    <div class="tech-logo-label">Vue.js</div>
-                </a>
-                <!-- Angular -->
-                <a class="tech-logo-wrapper">
-                    <iconify-icon icon="logos:angular-icon" class="tech-logo"></iconify-icon>
-                    <div class="tech-logo-label">Angular</div>
-                </a>
-                <!-- Svelte -->
-                <a class="tech-logo-wrapper">
-                    <iconify-icon icon="logos:svelte-icon" class="tech-logo"></iconify-icon>
-                    <div class="tech-logo-label">Svelte</div>
-                </a>
-                <!-- TypeScript -->
-                <a class="tech-logo-wrapper">
-                    <iconify-icon icon="logos:typescript-icon" class="tech-logo"></iconify-icon>
-                    <div class="tech-logo-label">TypeScript</div>
-                </a>
-                <!-- JavaScript -->
-                <a class="tech-logo-wrapper">
-                    <iconify-icon icon="logos:javascript" class="tech-logo"></iconify-icon>
-                    <div class="tech-logo-label">JavaScript</div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
+<div class="parallax1"></div>
 <!-- O Futuro que Construímos Juntos -->
 <div class="container mt-4 mt-md-5 mb-4 mb-md-5" id="future">
     <h1 class="text-center mb-4 mb-md-5 fw-bold">O Futuro que Construímos Juntos</h1>
@@ -819,46 +797,75 @@ studifyPromise
         @endforeach
     </div>
 </div>
-
-<!-- Back-end Technologies Section -->
-<div class="parallax3">
+<!-- Front-end Technologies Section -->
+<div class="parallax2">
     <div class="container py-4 py-md-5">
         <div class="row justify-content-center">
             <div class="col-12 text-center">
                 <div class="bg-white-transparent p-3 p-md-4 rounded-4 shadow-lg d-inline-block mb-3 mb-md-4">
-                    <h2 class="mb-0 fw-bold text-primary">Tecnologias Back-end que ensinamos</h2>
+                    <h2 class="mb-0 fw-bold text-primary">Tecnologias que dominamos</h2>
                 </div>
             </div>
         </div>
-        <div class="bg-white-transparent p-2 p-md-5 rounded-4 shadow-lg">
+        <div class="bg-white-transparent p-3 p-md-5 rounded-4 shadow-lg">
             <div class="tech-logos-container">
+                <!-- React -->
+                <a class="tech-logo-wrapper">
+                    <iconify-icon icon="logos:react" class="tech-logo"></iconify-icon>
+                    <div class="tech-logo-label">React</div>
+                </a>
+                <!-- Vue -->
+                <a class="tech-logo-wrapper">
+                    <iconify-icon icon="logos:vue" class="tech-logo"></iconify-icon>
+                    <div class="tech-logo-label">Vue.js</div>
+                </a>
+                <!-- Angular -->
+                <a class="tech-logo-wrapper">
+                    <iconify-icon icon="logos:angular-icon" class="tech-logo"></iconify-icon>
+                    <div class="tech-logo-label">Angular</div>
+                </a>
+                <!-- Svelte -->
+                <a class="tech-logo-wrapper">
+                    <iconify-icon icon="logos:svelte-icon" class="tech-logo"></iconify-icon>
+                    <div class="tech-logo-label">Svelte</div>
+                </a>
+                <!-- TypeScript -->
+                <a class="tech-logo-wrapper">
+                    <iconify-icon icon="logos:typescript-icon" class="tech-logo"></iconify-icon>
+                    <div class="tech-logo-label">TypeScript</div>
+                </a>
+                <!-- JavaScript -->
+                <a class="tech-logo-wrapper">
+                    <iconify-icon icon="logos:javascript" class="tech-logo"></iconify-icon>
+                    <div class="tech-logo-label">JavaScript</div>
+                </a>
                 <!-- Node.js -->
-                <a class="tech-logo-wrapper backend-tech">
+                <a class="tech-logo-wrapper">
                     <iconify-icon icon="logos:ruby" class="tech-logo"></iconify-icon>
                     <div class="tech-logo-label">Ruby</div>
                 </a>
                 <!-- Python -->
-                <a class="tech-logo-wrapper backend-tech">
+                <a class="tech-logo-wrapper">
                     <iconify-icon icon="logos:python" class="tech-logo"></iconify-icon>
                     <div class="tech-logo-label">Python</div>
                 </a>
                 <!-- Java -->
-                <a class="tech-logo-wrapper backend-tech">
+                <a class="tech-logo-wrapper">
                     <iconify-icon icon="logos:java" class="tech-logo"></iconify-icon>
                     <div class="tech-logo-label">Java</div>
                 </a>
                 <!-- C# -->
-                <a class="tech-logo-wrapper backend-tech">
+                <a class="tech-logo-wrapper">
                     <iconify-icon icon="logos:c-sharp" class="tech-logo"></iconify-icon>
                     <div class="tech-logo-label">C#</div>
                 </a>
                 <!-- MySQL -->
-                <a class="tech-logo-wrapper backend-tech">
+                <a class="tech-logo-wrapper">
                     <iconify-icon icon="logos:mysql" class="tech-logo"></iconify-icon>
                     <div class="tech-logo-label">MySQL</div>
                 </a>
                 <!-- Laravel -->
-                <a class="tech-logo-wrapper backend-tech">
+                <a class="tech-logo-wrapper">
                     <iconify-icon icon="logos:laravel" class="tech-logo"></iconify-icon>
                     <div class="tech-logo-label">Laravel</div>
                 </a>
@@ -866,6 +873,7 @@ studifyPromise
         </div>
     </div>
 </div>
+
 
 {{-- Team Section with Flip Cards --}}
 <div class="my-5 px-3 px-md-4 px-lg-5" id="equipe">
