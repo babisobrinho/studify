@@ -17,29 +17,29 @@
     }
     
     /* Estilos gerais */
-    .parallax1{
-        background-image:url('laptop.png');
+     .parallax1 {
+        background-image: url('laptop.png');
         background-attachment: fixed;
-        width:100%;
-        min-height:30vh;
-        background-size:cover;
+        width: 100%;
+        min-height: 50vh;
+        background-size: cover;
         background-position: center;
-    }
-    .parallax2, .parallax3 {
-        background-image:url('t.png');
-        background-attachment: fixed;
-        width:100%;
-        min-height:50vh;
-        background-size:cover;
-        background-position: center;
-    }
-    .parallax1, .parallax2, .parallax3 {
         position: relative;
-        -webkit-backface-visibility: hidden;
-        -webkit-transform: translate3d(0,0,0);
-        will-change: transform;
     }
-    .parallax1::before{
+    
+    .parallax2, .parallax3 {
+        background-image: url('t.png');
+        background-attachment: fixed;
+        width: 100%;
+        min-height: 50vh;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    
+    .parallax1::before, 
+    .parallax2::before, 
+    .parallax3::before {
         content: "";
         position: absolute;
         top: 0;
@@ -48,36 +48,20 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.74);
     }
-    .parallax2::before, .parallax3::before {
-        
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0); 
-    }
-    .parallax1, .parallax2, .parallax3 {
-        opacity: 0;
-        transition: opacity 1.5s ease-out;
-    }
-    .parallax1.visible, .parallax2.visible, .parallax3.visible {
-        opacity: 1;
-    }
     
-    /* Dispositivos móveis - desativa o efeito parallax mas mantém a seção visível */
+    /* Ajustes para dispositivos móveis */
     @media (max-width: 768px) {
         .parallax1, .parallax2, .parallax3 {
-            background-attachment: fixed;
-            background-position: center !important;
+            background-attachment: scroll;
             min-height: 30vh;
         }
         
         .parallax1 {
             min-height: 25vh;
         }
-        
+    
+    /* Dispositivos móveis - desativa o efeito parallax mas mantém a seção visível */
+ 
         .parallax1 {
             background-image: url('laptop.png') !important;
         }
@@ -86,12 +70,6 @@
         }
     }
 
-    /* Desktop - mantém o efeito parallax */
-    @media (min-width: 769px) {
-        .parallax1, .parallax2, .parallax3 {
-            background-attachment: fixed;
-        }
-    }
     
     /* Efeito de luz que segue o mouse */
     .mouse-light {
