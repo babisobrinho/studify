@@ -27,55 +27,78 @@
       </div>
     </div>
 
+   
     <!-- Filters Card -->
-    <div class="card shadow border-0 mb-4">
-      <div class="card-header bg-white py-3">
+<div class="card shadow border-0 mb-4">
+    <div class="card-header bg-white py-3">
         <h6 class="m-0 font-weight-bold text-primary">
-          <i class="bi bi-funnel me-2"></i>Filtros
+            <i class="bi bi-funnel me-2"></i>Filtros
         </h6>
-      </div>
-      <div class="card-body">
-        <form action="{{ route('admin.tracks.index') }}" method="GET">
-          <div class="row g-3">
-            <div class="col-md-3">
-              <label class="form-label small text-uppercase fw-bold text-muted border-0">Dificuldade</label>
-              <select name="difficulty" class="form-select  border-0 form-select-sm">
-                <option value="">Todas</option>
-                @foreach(\App\Enums\DifficultyEnum::cases() as $case)
-                  <option value="{{ $case->value }}" {{ request('difficulty') == $case->value ? 'selected' : '' }}>
-                    {{ $case->label() }}
-                  </option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label small text-uppercase fw-bold text-muted">Visibilidade</label>
-              <select name="is_public" class="form-select border-0 form-select-sm">
-                <option value="">Todas</option>
-                <option value="1" {{ request('is_public') === '1' ? 'selected' : '' }}>Público</option>
-                <option value="0" {{ request('is_public') === '0' ? 'selected' : '' }}>Privado</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label small text-uppercase fw-bold text-muted">Tipo</label>
-              <select name="is_official" class="form-select border-0 form-select-sm">
-                <option value="">Todos</option>
-                <option value="1" {{ request('is_official') === '1' ? 'selected' : '' }}>Oficial</option>
-                <option value="0" {{ request('is_official') === '0' ? 'selected' : '' }}>Comunitário</option>
-              </select>
-            </div>
-            <div class="col-md-3 d-flex align-items-end gap-2">
-              <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
-                <i class="bi bi-funnel me-1"></i> Aplicar
-              </button>
-              <a href="{{ route('admin.tracks.index') }}" class="btn btn-sm btn-secondary">
-                <i class="bi bi-arrow-counterclockwise"></i>
-              </a>
-            </div>
-          </div>
-        </form>
-      </div>
     </div>
+    <div class="card-body">
+        <form action="{{ route('admin.tracks.index') }}" method="GET">
+            <div class="row g-3">
+                <!-- Campo de busca -->
+                <div class="col-md-3">
+                    <label class="form-label small text-uppercase fw-bold text-muted">Buscar</label>
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control border-0 form-control-sm" 
+                               placeholder="Nome ou descrição" value="{{ request('search') }}">
+                        @if(request('search'))
+                            <button type="button" class="btn btn-sm btn-outline-secondary border-0" 
+                                    onclick="this.form.search.value=''; this.form.submit()">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        @endif
+                    </div>
+                </div>
+                
+                <!-- Filtro por dificuldade -->
+                <div class="col-md-2">
+                    <label class="form-label small text-uppercase fw-bold text-muted">Dificuldade</label>
+                    <select name="difficulty" class="form-select border-0 form-select-sm">
+                        <option value="">Todas</option>
+                        @foreach(\App\Enums\DifficultyEnum::cases() as $case)
+                            <option value="{{ $case->value }}" {{ request('difficulty') == $case->value ? 'selected' : '' }}>
+                                {{ $case->label() }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <!-- Filtro por visibilidade -->
+                <div class="col-md-2">
+                    <label class="form-label small text-uppercase fw-bold text-muted">Visibilidade</label>
+                    <select name="is_public" class="form-select border-0 form-select-sm">
+                        <option value="">Todas</option>
+                        <option value="1" {{ request('is_public') === '1' ? 'selected' : '' }}>Público</option>
+                        <option value="0" {{ request('is_public') === '0' ? 'selected' : '' }}>Privado</option>
+                    </select>
+                </div>
+                
+                <!-- Filtro por tipo -->
+                <div class="col-md-2">
+                    <label class="form-label small text-uppercase fw-bold text-muted">Tipo</label>
+                    <select name="is_official" class="form-select border-0 form-select-sm">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('is_official') === '1' ? 'selected' : '' }}>Oficial</option>
+                        <option value="0" {{ request('is_official') === '0' ? 'selected' : '' }}>Comunitário</option>
+                    </select>
+                </div>
+                
+                <!-- Botões de ação -->
+                <div class="col-md-3 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-sm btn-primary flex-grow-1">
+                        <i class="bi bi-funnel me-1"></i> Aplicar
+                    </button>
+                    <a href="{{ route('admin.tracks.index') }}" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
     <!-- Courses Table -->
     <div class="card shadow border-0">
@@ -355,27 +378,37 @@
 
 @push('scripts')
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Initialize tooltips
-      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-      tooltipTriggerList.map(function (tooltipTriggerEl) {
+   document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
-      });
-
-      // Delete modal configuration
-      const deleteButtons = document.querySelectorAll('.delete-btn');
-      const deleteForm = document.getElementById('deleteForm');
-      const trackTitle = document.getElementById('trackTitle');
-
-      deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const trackId = this.getAttribute('data-id');
-          const title = this.getAttribute('data-title');
-
-          trackTitle.textContent = title;
-          deleteForm.action = `/admin/tracks/${trackId}`;
-        });
-      });
     });
+
+    // Delete modal configuration
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    const deleteForm = document.getElementById('deleteForm');
+    const trackTitle = document.getElementById('trackTitle');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const trackId = this.getAttribute('data-id');
+            const title = this.getAttribute('data-title');
+
+            trackTitle.textContent = title;
+            deleteForm.action = `/admin/tracks/${trackId}`;
+        });
+    });
+
+    // Submit form when filters change (optional)
+    document.querySelectorAll('select[name="difficulty"], select[name="is_public"], select[name="is_official"]').forEach(select => {
+        select.addEventListener('change', function() {
+            // Only auto-submit if there's no search term to avoid unexpected behavior
+            if (!document.querySelector('input[name="search"]').value) {
+                this.form.submit();
+            }
+        });
+    });
+});
   </script>
 @endpush

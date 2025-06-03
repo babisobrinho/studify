@@ -18,30 +18,77 @@ class AdminTrackController extends Controller
 public function index()
 {
     $perPage = request('perPage', 10);
-    
-    $query = Track::with(['user', 'tags'])
-        ->orderBy('created_at', 'desc');
+    $search = strtolower(trim(request('search')));
+    $difficulty = request('difficulty');
+    $is_public = request('is_public');
+    $is_official = request('is_official');
 
-    // Filtro por dificuldade (com tratamento para Enum)
-    if (request()->has('difficulty') && request('difficulty') != '') {
-        $query->where('difficulty', request('difficulty'));
+    // Busca tudo do banco antes de filtrar por alias
+    $tracks = Track::with(['user', 'tags'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Filtro por busca com alias em memória
+    if (!empty($search)) {
+        $aliases = [
+            'p' => ['python', 'php', 'power bi'],
+            'js' => ['javascript'],
+            'jav' => ['java', 'javascript'],
+            'phyron' => ['python'],
+            'rct' => ['react'],
+        ];
+
+        $tracks = $tracks->filter(function ($track) use ($search, $aliases) {
+            $title = strtolower($track->title);
+            $description = strtolower($track->description);
+
+            // Verificação direta
+            if (str_contains($title, $search) || str_contains($description, $search)) {
+                return true;
+            }
+
+            // Verificação por alias
+            foreach ($aliases as $key => $targets) {
+                if (str_starts_with($search, $key)) {
+                    foreach ($targets as $alias) {
+                        if (str_contains($title, $alias) || str_contains($description, $alias)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        });
     }
 
-    // Restante dos filtros permanecem iguais
-    if (request()->has('is_public') && request('is_public') !== '') {
-        $query->where('is_public', request('is_public'));
+    // Filtros adicionais aplicados na coleção
+    if ($difficulty) {
+        $tracks = $tracks->where('difficulty', $difficulty);
     }
 
-    if (request()->has('is_official') && request('is_official') !== '') {
-        $query->where('is_official', request('is_official'));
+    if ($is_public !== null && $is_public !== '') {
+        $tracks = $tracks->where('is_public', $is_public);
     }
 
-    $tracks = $query->paginate($perPage)
-                  ->appends(request()->query());
+    if ($is_official !== null && $is_official !== '') {
+        $tracks = $tracks->where('is_official', $is_official);
+    }
 
-    return view('admin.tracks.index', compact('tracks'));
+    // Paginação manual
+    $currentPage = request('page', 1);
+    $paged = $tracks->forPage($currentPage, $perPage)->values();
+
+    $paginatedTracks = new \Illuminate\Pagination\LengthAwarePaginator(
+        $paged,
+        $tracks->count(),
+        $perPage,
+        $currentPage,
+        ['path' => request()->url(), 'query' => request()->query()]
+    );
+
+    return view('admin.tracks.index', ['tracks' => $paginatedTracks]);
 }
-
     /**
      * Show the form for creating a new track.
      */
