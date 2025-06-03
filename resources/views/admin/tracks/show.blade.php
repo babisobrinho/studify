@@ -35,12 +35,13 @@
                 <!-- Left Column - Image and Basic Info -->
                 <div class="col-md-4 mb-4 mb-md-0">
                     @if($track->cover_image)
-                        <img src="{{ asset('storage/' . $track->cover_image) }}" 
-                             class="img-fluid rounded mb-3 w-100" alt="Capa do curso {{ $track->title }}">
+                        @php
+                            $isExternal = str_starts_with($track->cover_image, 'http://') || str_starts_with($track->cover_image, 'https://');
+                            $imageUrl = $isExternal ? $track->cover_image : asset('storage/' . $track->cover_image);
+                        @endphp
+                        <img src="{{ $imageUrl }}" alt="Capa do curso" style="max-height: 270px; max-width: 300px; margin-bottom: 50px; margin-left: 130px; margin-top: 30px">
                     @else
-                        <div class="d-flex align-items-center justify-content-center bg-light rounded mb-3" style="height: 200px;">
-                            <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
-                        </div>
+                        <span>Sem imagem</span>
                     @endif
                     
                     <div class="d-grid gap-2">

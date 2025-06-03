@@ -27,7 +27,7 @@
       </div>
     </div>
 
-   
+    <!-- Filters Card -->
     <!-- Filters Card -->
 <div class="card shadow border-0 mb-4">
     <div class="card-header bg-white py-3">
@@ -130,13 +130,15 @@
                   <td class="ps-4">
                     <div class="d-flex align-items-center">
                       <div class="position-relative">
-                        @if($track->cover_image)
-                          <img src="{{ asset('storage/' . $track->cover_image) }}" class="rounded me-3" alt="{{ $track->title }}" width="60" height="60" style="object-fit: cover;">
-                        @else
-                          <div class="bg-light rounded d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
-                            <i class="bi bi-book text-muted fs-4"></i>
-                          </div>
-                        @endif
+                       @if($track->cover_image)
+                        @php
+                            $isExternal = str_starts_with($track->cover_image, 'http://') || str_starts_with($track->cover_image, 'https://');
+                            $imageUrl = $isExternal ? $track->cover_image : asset('storage/' . $track->cover_image);
+                        @endphp
+                        <img src="{{ $imageUrl }}" alt="Capa do curso" style="max-height: 100px; max-width:100px; margin-right: 25px;">
+                    @else
+                        <span>Sem imagem</span>
+                    @endif
                         @if($track->is_featured)
                           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
                             <i class="bi bi-star-fill"></i>

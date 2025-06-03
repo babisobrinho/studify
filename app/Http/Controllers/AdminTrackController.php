@@ -149,6 +149,7 @@ public function index()
      */
     public function edit(Track $track)
 {
+
     $instructors = User::whereHas('roles', function($query) {
         $query->whereIn('name', ['admin', 'curator']);
     })->get();
@@ -165,6 +166,19 @@ public function index()
             'advanced' => 'Avançado'
         ]
     ]);
+    if ($request->remove_image == '1') {
+    // Se existir no storage, remove o arquivo
+    if (Storage::exists($track->cover_image)) {
+        Storage::delete($track->cover_image);
+    }
+    $track->cover_image = null;
+}
+
+if ($request->hasFile('cover_image')) {
+    // Processa o upload da nova imagem
+    $path = $request->file('cover_image')->store('tracks/covers');
+    $track->cover_image = $path;
+}
 }
 
     /**

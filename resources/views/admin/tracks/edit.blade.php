@@ -156,30 +156,38 @@
                     </div>
 
                     <!-- Cover Image Section -->
-                    <div class="mb-4">
-                        <label for="cover_image" class="form-label border-0 fw-semibold">Imagem do Curso</label>
-                        <input type="file" class="form-control border-0 @error('cover_image') is-invalid @enderror" 
-                            id="cover_image" name="cover_image" 
-                            accept="image/*" />
-                        <div class="form-text">Imagem de capa recomendada: 800x450 pixels.</div>
-                        @error('cover_image')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        @if($track->cover_image)
-                            <div class="mt-3">
-                                <div class="d-flex align-items-center gap-3">
-                                    <img src="{{ Storage::url($track->cover_image) }}" alt="Capa atual" style="max-height: 120px; border: none;" class="img-thumbnail">
-                                    <div>
-                                        <small class="d-block text-muted">Imagem atual</small>
-                                        <button type="button" class="btn btn-sm btn-outline-danger mt-1 " id="removeImageBtn">
-                                            <i class="bi bi-trash"></i> Remover Imagem
-                                        </button>
-                                        <input type="hidden" name="remove_image" id="removeImageInput" value="0">
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
+                   <div class="mb-4">
+    <label for="cover_image" class="form-label border-0 fw-semibold">Imagem do Curso</label>
+    <input type="file" class="form-control border-0 @error('cover_image') is-invalid @enderror" 
+        id="cover_image" name="cover_image" 
+        accept="image/*" />
+    <div class="form-text">Imagem de capa recomendada: 800x450 pixels.</div>
+    
+    @error('cover_image')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    
+    @if($track->cover_image)
+        <div class="mt-3">
+            <div class="d-flex align-items-center gap-3">
+                <!-- Verifica se a imagem é uma URL (começa com http) ou um arquivo no storage -->
+                @if(filter_var($track->cover_image, FILTER_VALIDATE_URL))
+                    <img src="{{ $track->cover_image }}" alt="Capa atual" style="max-height: 120px; border: none;" class="img-thumbnail">
+                @else
+                    <img src="{{ Storage::url($track->cover_image) }}" alt="Capa atual" style="max-height: 120px; border: none;" class="img-thumbnail">
+                @endif
+                
+                <div>
+                    <small class="d-block text-muted">Imagem atual</small>
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-1" id="removeImageBtn">
+                        <i class="bi bi-trash"></i> Remover Imagem
+                    </button>
+                    <input type="hidden" name="remove_image" id="removeImageInput" value="0">
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
 
                     <!-- Form Actions -->
                     <div class="d-flex justify-content-between align-items-center pt-3 border-top">
@@ -266,6 +274,16 @@
 
     @push('scripts')
         <script>
+            document.getElementById('removeImageBtn').addEventListener('click', function() {
+    // Define o valor do input hidden para 1 (indicando que a imagem deve ser removida)
+    document.getElementById('removeImageInput').value = '1';
+    
+    // Esconde a imagem atual
+    this.closest('.mt-3').style.display = 'none';
+    
+    // Opcional: mostra mensagem de confirmação
+    alert('Imagem marcada para remoção. Envie o formulário para confirmar.');
+});
             // Geração automática do slug baseado no título
             document.getElementById('title').addEventListener('input', function() {
                 const title = this.value;
