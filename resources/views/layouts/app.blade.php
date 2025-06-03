@@ -10,6 +10,8 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+    @yield('style')
 </head>
 <body>
     @include('layouts.partials.navbar')
@@ -21,5 +23,7 @@
     </div>
 
     @include('layouts.partials.footer')
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 </body>
 </html>

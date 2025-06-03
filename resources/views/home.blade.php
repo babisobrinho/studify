@@ -13,9 +13,12 @@
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
+                        
                     @endif
-
                     {{ __('You are logged in!') }}
+                    <a href="{{ route('user.profile', auth()->user()?->username) }}">
+                        Ver Perfil de {{ '@' . auth()->user()?->username }}
+                    </a>
                 </div>
             </div>
         </div>

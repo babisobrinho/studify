@@ -38,6 +38,18 @@
                                         <input id="password" type="password"
                                             class="form-control @error('password') is-invalid @enderror border-0 rounded-pill pe-5"
                                             name="password" placeholder="Palavra-passe" required autocomplete="current-password">
+                                        <button type="button"
+                                            class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-3 border-0 bg-transparent toggle-password"
+                                            data-target="password"
+                                            aria-label="Mostrar ou esconder palavra-passe"
+                                            style="min-width: 2rem; min-height: 2rem;">
+
+                                            {{-- Ícone para mostrar a password --}}
+                                            <x-solar-eye-broken class="w-6 h-6 text-dark icon-show-password" id="icon-show" />
+
+                                            {{-- Ícone para esconder a password --}}
+                                            <x-solar-eye-closed-line-duotone class="w-6 h-6 text-dark d-none icon-hide-password" id="icon-hide" />
+                                        </button>
                                         @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -77,4 +89,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.querySelector('.toggle-password');
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function () {
+                const targetId = this.dataset.target;
+                const input = document.getElementById(targetId);
+                const iconShow = this.querySelector('.icon-show-password');
+                const iconHide = this.querySelector('.icon-hide-password');
+
+                if (input) {
+                    const isHidden = input.type === 'password';
+                    input.type = isHidden ? 'text' : 'password';
+
+                    if (iconShow && iconHide) {
+                        iconShow.classList.toggle('d-none', !isHidden);
+                        iconHide.classList.toggle('d-none', isHidden);
+                    }
+                }
+            });
+        }
+    });
+</script>
 @endsection
