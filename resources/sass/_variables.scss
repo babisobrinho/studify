@@ -1,7 +1,128 @@
-// Body
-$body-bg: #f8fafc;
+// 
+// _variable.scss
+//
 
-// Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+// Prefix for :root CSS variables
+$prefix:                        'bs-';
+
+// Google Font Family link
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap');
+
+// Font Family
+$font-family-primary:                             "Poppins", sans-serif;
+$font-family-secondary:                           "Inter", sans-serif;
+
+//
+// Color system (Atualizado com a paleta STUDIFY)
+//
+
+// Core Colors
+$petroleo-escuro:    #0F2027;
+$azul-medio:         #203A43;
+$azul-esverdeado:    #2C5364;
+$verde-agua:         #06D6A0;
+$cinza-claro:        #EDF2F4;
+
+// Accent Colors
+$ciano-vivo:         #5DDAF8;
+$verde-neon:         #4FFF7B;
+$rosa-eletrico:      #F72585;
+$laranja:            #F8961E;
+
+// Neutral Colors
+$white:              #FFFFFF;
+$black:              #000000;
+
+// scss-docs-start theme-color-variables
+$primary:       $verde-agua;
+$secondary:     $azul-esverdeado;
+$success:       $verde-neon;
+$info:          $ciano-vivo;
+$warning:       $laranja;
+$danger:        $rosa-eletrico;
+$light:         $cinza-claro;
+$dark:          $petroleo-escuro;
+$blue:          $azul-medio;
+$teal:          $petroleo-escuro;
+$cyan:          $ciano-vivo;
+$pink:          $rosa-eletrico;
+// Cores adicionais da paleta
+
+
+// Gradação de cinzas
+$gray-100: #f8f9fa;
+$gray-200: #eef2f7;
+$gray-300: #d8dfe7;
+$gray-400: #b0b0bb;
+$gray-500: #8486a7;
+$gray-600: #5d7186;
+$gray-700: #424e5a;
+$gray-800: #36404a;
+$gray-900: #0F2027; // Usando Petróleo Escuro
+
+// Body
+$body-bg:                   $cinza-claro;
+$body-color:                $azul-medio;
+
+// Dark Mode
+$body-dark-bg:              #22282e;
+$body-dark-color:           #aab8c5;
+
+// Border
+$border-color:                #2f3944;
+$border-radius:               .75rem;
+$border-radius-sm:            .5rem;
+
+// Tipografia
+$headings-color:              $petroleo-escuro;
+$headings-font-family:        $font-family-primary;
+$headings-font-weight:        700;
+
+// Links
+$link-color:                $azul-esverdeado;
+$link-hover-color:          darken($verde-agua, 15%);
+
+// Botões
+$btn-border-radius:         $border-radius;
+$btn-box-shadow:            0px 2px 6px rgba($petroleo-escuro, 0.1);
+$btn-primary-bg:            $verde-agua;
+$btn-primary-border:        $verde-agua;
+
+// Cards
+$card-bg:                   $white;
+$card-border-color:         rgba($azul-medio, 0.1);
+$card-box-shadow:           0px 3px 4px rgba($petroleo-escuro, 0.03);
+
+// Modo Escuro
+[data-bs-theme="dark"] {
+    --#{$prefix}body-bg: #22282e;
+    --#{$prefix}body-color: #aab8c5;
+    --#{$prefix}border-color: #2f3944;
+    --#{$prefix}headings-color: #dee2e6;
+
+
+    // Cards
+    --#{$prefix}card-bg: #282f36;
+    --#{$prefix}card-border-color: #36404a;
+}
+// Adicionar transições globais
+$transition-base: all 0.3s ease-in-out;
+
+// Customizar variáveis de botão
+$btn-border-width: 2px;
+
+@keyframes slide-up {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.6s ease-out;
+}
+$studify-gradient: linear-gradient(135deg, $azul-esverdeado 0%, $petroleo-escuro 100%);
+$studify-cta-bg: linear-gradient(45deg, $verde-agua 0%, $ciano-vivo 100%);
+
+// Componentes específicos STUDIFY
+$topbar-height:             100px;
+$main-nav-width:            280px;
+$logo-lg-height:            24px;
