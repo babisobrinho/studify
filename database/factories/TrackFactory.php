@@ -6,6 +6,7 @@ use App\Enums\DifficultyEnum;
 use App\Models\User;
 use App\Models\Track;
 use App\Models\Step;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,6 +25,7 @@ class TrackFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'category_id' => DB::table('categories')->inRandomOrder()->value('id'),
             'title' => $this->faker->sentence(),
             'slug' => $this->faker->slug(),
             'description' => $this->faker->paragraph(),

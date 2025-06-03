@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tracks', function (Blueprint $table) {
-            $table->string('plan_color', 7)->default('#06d6a0')->after('description');
+        // Criar a tabela categories
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50);
+            $table->string('slug', 100)->unique();
+            $table->text('description')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tracks', function (Blueprint $table) {
-            $table->dropColumn('plan_color');
-        });
+        Schema::dropIfExists('categories');
     }
 };

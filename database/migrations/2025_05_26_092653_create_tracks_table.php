@@ -15,15 +15,19 @@ return new class extends Migration
         Schema::create('tracks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('title', 100);
             $table->string('slug', 120)->unique();
             $table->text('description')->nullable();
+            $table->string('plan_color', 7)->default('#06d6a0');
             $table->boolean('is_official')->default(false);
             $table->boolean('is_public')->default(true);
             $table->enum('difficulty', DifficultyEnum::values())->default(DifficultyEnum::BEGINNER->value);
             $table->string('cover_image')->nullable();
             $table->integer('contributors_count')->default(0);
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 
