@@ -7,6 +7,14 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+.text-hover-primary {
+    transition: $transition-base;
+
+    &:hover {
+        color: $primary !important;
+    }
+}
+
 .bg-hover-dark {
     transition: $transition-base;
 

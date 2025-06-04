@@ -70,10 +70,9 @@ class DatabaseSeeder extends Seeder
         $tags = Tag::factory()->count(5)->create();
 
         // Cria tracks (alguns oficiais pelo admin)
-        $possibleUsers = collect([$admin->id])->merge($users->pluck('id'));
+        $possibleUsers = collect($users->pluck('id'));
         $tracks = Track::factory()
-            ->count(5)
-            ->difficulty(DifficultyEnum::BEGINNER)
+            ->count(10)
             ->create([
                 'user_id' => $possibleUsers->random(),
             ]);
@@ -174,23 +173,24 @@ class DatabaseSeeder extends Seeder
         }
 
         // Cria ratings
-        $ratingsGiven = [];
-        while (count($ratingsGiven) < 5) {
-            $userId = $users->random()->id;
-            $trackId = $tracks->random()->id;
-            $key = "$userId-$trackId";
+        $userIds = $users->pluck('id');
+        $trackIds = $tracks->pluck('id');
 
-            if (!isset($ratingsGiven[$key])) {
-                Rating::create([
-                    'user_id' => $userId,
-                    'track_id' => $trackId,
-                    'rating' => rand(1, 5),
-                    'review' => fake()->sentence(10),
-                    'created_at' => now()->subDays(rand(1, 60)),
-                ]);
-                $ratingsGiven[$key] = true;
-            }
-        }
+        // Create all combinations of user-track pairs (Cartesian product)
+        $pairs = $userIds->crossJoin($trackIds);
+
+        // Iterate over each pair and create the rating
+        $pairs->each(function ($pair) {
+            [$userId, $trackId] = $pair;
+
+            Rating::create([
+                'user_id' => $userId,
+                'track_id' => $trackId,
+                'rating' => 5,
+                'review' => fake()->sentence(10),
+                'created_at' => now()->subDays(rand(1, 60)),
+            ]);
+        });
 
         // Cria follows entre usuários
         $users = User::all();

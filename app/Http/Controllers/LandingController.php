@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Track;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LandingController extends Controller
 {
@@ -13,10 +14,14 @@ class LandingController extends Controller
     public function index()
     {
         $tracks = Track::official()
-            ->with(['ratings'])
-            ->withAvg('ratings as average_rating', 'rating')
-            ->having('average_rating', '=', 5)
-            ->get();
+            ->with('ratings')
+            ->get()
+            ->map(function ($track) {
+                $track->average_rating = $track->ratings->avg('rating') ?? 0;
+                return $track;
+            })
+            ->sortByDesc('average_rating')
+            ->take(6);
 
         return view('landing.index', compact('tracks'));
     }
