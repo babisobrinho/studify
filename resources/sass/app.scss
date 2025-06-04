@@ -6,3 +6,16 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+.bg-hover-dark {
+    transition: $transition-base;
+
+    &:hover {
+        background-color: $dark !important;
+        color: $white !important;
+    }
+}
+
+.bg-blue {
+    background-color: #203A43;
+}

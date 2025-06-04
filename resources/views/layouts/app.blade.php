@@ -14,11 +14,9 @@
 <body>
     @include('layouts.partials.navbar')
 
-    <div id="app">
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+    <main id="app">
+        @yield('content')
+    </main>
 
     @include('layouts.partials.footer')
 </body>

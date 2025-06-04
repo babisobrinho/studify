@@ -1,11 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingController;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'welcome'])->name('welcome');
+Route::middleware('guest')->group(function () {
+    Route::controller(LandingController::class)->group(function () {
+        Route::get('/', 'index')->name('landing');
+        Route::get('/about', 'about')->name('about');
+    });
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/sobre', [App\Http\Controllers\HomeController::class, 'sobre'])->name('sobre');
+Route::middleware('auth')->group(function () {
+    //
+});

@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
     }
 
     /**
@@ -25,21 +25,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         return view('home');
-    }
-    public function sobre()
-    {
-
-        return view('sobre');
-    }
-    public function welcome()
-    {
-        $tracks = Track::official()
-            ->with(['ratings'])
-            ->withAvg('ratings as average_rating', 'rating')
-            ->having('average_rating', '=', 5)
-            ->get();
-        return view('welcome', compact('tracks'));
     }
 }
