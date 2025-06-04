@@ -179,7 +179,7 @@ class HomeController extends Controller
             ]
         ];
 
-        return view('home', compact(
+        return view('users.dashboard', compact(
             'currentUser', 
             'lastStep', 
             'lastTrack', 

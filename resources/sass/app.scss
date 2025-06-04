@@ -7,6 +7,10 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+*:focus {
+    box-shadow: none !important;
+}
+
 .text-hover-primary {
     transition: $transition-base;
 
