@@ -38,6 +38,9 @@ class DatabaseSeeder extends Seeder
         // Cria níveis de usuário primeiro
         $levels = $this->createLevels();
 
+        // Cria categorias
+        $this->createCategories();
+
         // Cria o usuário admin com o primeiro nível
         $admin = $this->createAdminUser($levels->first());
 
@@ -70,12 +73,19 @@ class DatabaseSeeder extends Seeder
         $tags = Tag::factory()->count(5)->create();
 
         // Cria tracks (alguns oficiais pelo admin)
-        $possibleUsers = collect($users->pluck('id'));
-        $tracks = Track::factory()
-            ->count(10)
-            ->create([
-                'user_id' => $possibleUsers->random(),
-            ]);
+        $possibleUsers = collect([$admin->id])->merge($users->pluck('id'));
+        $categories = DB::table('categories')->pluck('id');
+        $difficulties = DifficultyEnum::cases();
+        $tracks = collect();
+        for ($i = 0; $i < 10; $i++) {
+            $tracks->push(
+                Track::factory()->create([
+                    'user_id' => $possibleUsers->random(),
+                    'category_id' => $categories->random(),
+                    'difficulty' => $difficulties[array_rand($difficulties)]->value,
+                ])
+            );
+        }
 
         // Atribui tags aos tracks
         $tracks->each(function ($track) use ($tags) {
@@ -250,48 +260,52 @@ class DatabaseSeeder extends Seeder
      */
     protected function createLevels()
     {
-        return collect([
-            Level::create([
+        $levelsData = [
+            [
                 'name' => 'Iniciante',
                 'slug' => 'iniciante',
                 'min_experience' => 0,
                 'max_experience' => 100,
                 'badge_image' => 'badges/beginner.png',
                 'description' => 'Nível inicial para novos usuários',
-            ]),
-            Level::create([
+            ],
+            [
                 'name' => 'Intermediário',
                 'slug' => 'intermediario',
                 'min_experience' => 101,
                 'max_experience' => 300,
                 'badge_image' => 'badges/intermediate.png',
                 'description' => 'Nível para usuários com alguma experiência',
-            ]),
-            Level::create([
+            ],
+            [
                 'name' => 'Avançado',
                 'slug' => 'avancado',
                 'min_experience' => 301,
                 'max_experience' => 600,
                 'badge_image' => 'badges/advanced.png',
                 'description' => 'Nível para usuários experientes',
-            ]),
-            Level::create([
+            ],
+            [
                 'name' => 'Expert',
                 'slug' => 'expert',
                 'min_experience' => 601,
                 'max_experience' => 1000,
                 'badge_image' => 'badges/expert.png',
                 'description' => 'Nível para especialistas',
-            ]),
-            Level::create([
+            ],
+            [
                 'name' => 'Mestre',
                 'slug' => 'mestre',
                 'min_experience' => 1001,
                 'max_experience' => null,
                 'badge_image' => 'badges/master.png',
                 'description' => 'O nível mais alto possível',
-            ]),
-        ]);
+            ],
+        ];
+
+        return collect($levelsData)->map(function ($level) {
+            return Level::updateOrCreate(['name' => $level['name']], $level);
+        });
     }
 
     /**
@@ -315,5 +329,32 @@ class DatabaseSeeder extends Seeder
         $admin->givePermissionTo(['manage_tracks', 'manage_users', 'manage_content']);
 
         return $admin;
+    }
+
+    protected function createCategories(): void
+    {
+        $categories = [
+            ['name' => 'Desenvolvimento Web', 'slug' => 'desenvolvimento-web', 'description' => 'Cursos relacionados ao desenvolvimento de sites e aplicações web'],
+            ['name' => 'Front-End', 'slug' => 'front-end', 'description' => 'Cursos focados em tecnologias de interface e experiência do usuário'],
+            ['name' => 'Back-End', 'slug' => 'back-end', 'description' => 'Cursos focados em desenvolvimento de servidores e APIs'],
+            ['name' => 'Inteligência Artificial', 'slug' => 'inteligencia-artificial', 'description' => 'Cursos sobre IA, machine learning e deep learning'],
+            ['name' => 'Mobile', 'slug' => 'mobile', 'description' => 'Cursos de desenvolvimento de aplicativos móveis'],
+            ['name' => 'DevOps', 'slug' => 'devops', 'description' => 'Cursos sobre integração entre desenvolvimento e operações'],
+            ['name' => 'Segurança', 'slug' => 'seguranca', 'description' => 'Cursos sobre segurança da informação e cibersegurança'],
+            ['name' => 'Data Science', 'slug' => 'data-science', 'description' => 'Cursos sobre ciência de dados e análise de dados'],
+            ['name' => 'UX/UI Design', 'slug' => 'ux-ui-design', 'description' => 'Cursos sobre design de interfaces e experiência do usuário'],
+            ['name' => 'Cloud Computing', 'slug' => 'cloud-computing', 'description' => 'Cursos sobre computação em nuvem e serviços cloud'],
+        ];
+
+        $timestamp = now();
+
+        $prepared = array_map(function ($category) use ($timestamp) {
+            return array_merge($category, [
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
+        }, $categories);
+
+        DB::table('categories')->insert($prepared);
     }
 }
