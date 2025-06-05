@@ -32,32 +32,77 @@
                         @endif
                     </div>
 
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        <!-- Exibir a categoria -->
-                        @if(isset($category))
-                            <span class="badge rounded-pill px-3 py-1" style="background-color: {{ $track->plan_color ?? '#06D6A0' }}; color: white;">
-                                <i class="fas fa-folder me-1"></i> {{ $category->name }}
+                    <!-- Início da seção de badges - Removido div wrapper para eliminar possíveis elementos vazios -->
+                    @php
+                        // Inicializa array para armazenar todos os badges válidos
+                        $allBadges = [];
+
+                        // Adiciona badge de categoria se válido
+                        if(isset($category) && is_object($category) && isset($category->name) && !empty(trim($category->name))) {
+                            $allBadges[] = [
+                                'type' => 'category',
+                                'text' => $category->name,
+                                'icon' => 'fa-folder',
+                                'bg_color' => $track->plan_color ?? '#06D6A0',
+                                'text_color' => 'white'
+                            ];
+                        }
+
+                        // Adiciona badge de dificuldade
+                        $difficultyText = '';
+                        $difficultyIcon = '';
+
+                        if($track->difficulty === 'beginner') {
+                            $difficultyText = 'Iniciante';
+                            $difficultyIcon = 'fa-signal-1';
+                        } elseif($track->difficulty === 'intermediate') {
+                            $difficultyText = 'Intermediário';
+                            $difficultyIcon = 'fa-signal-2';
+                        } elseif($track->difficulty === 'advanced') {
+                            $difficultyText = 'Avançado';
+                            $difficultyIcon = 'fa-signal-3';
+                        }
+
+                        if(!empty($difficultyText)) {
+                            $allBadges[] = [
+                                'type' => 'difficulty',
+                                'text' => $difficultyText,
+                                'icon' => $difficultyIcon,
+                                'bg_color' => '#EDF2F4',
+                                'text_color' => $track->plan_color ?? '#2C5364'
+                            ];
+                        }
+
+                        // Adiciona badges de tags válidas
+                        if(isset($tags) && count($tags) > 0) {
+                            foreach($tags as $tag) {
+                                if (is_object($tag) && isset($tag->name) && !empty(trim($tag->name))) {
+                                    $allBadges[] = [
+                                        'type' => 'tag',
+                                        'text' => $tag->name,
+                                        'icon' => '',
+                                        'bg_color' => '#EDF2F4',
+                                        'text_color' => $track->plan_color ?? '#2C5364'
+                                    ];
+                                }
+                            }
+                        }
+                    @endphp
+
+                        <!-- Renderiza todos os badges válidos de uma vez -->
+                    @if(count($allBadges) > 0)
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            @foreach($allBadges as $badge)
+                                <span class="badge rounded-pill px-3 py-1" style="background-color: {{ $badge['bg_color'] }}; color: {{ $badge['text_color'] }}; transition: all 0.3s ease;">
+                                @if(!empty($badge['icon']))
+                                        <i class="fas {{ $badge['icon'] }} me-1"></i>
+                                    @endif
+                                    {{ $badge['text'] }}
                             </span>
-                        @endif
-
-                        <!-- Exibir o nível de dificuldade -->
-                        <span class="badge rounded-pill px-3 py-1" style="background-color: #EDF2F4; color: {{ $track->plan_color ?? '#2C5364' }};">
-                            @if($track->difficulty === 'beginner')
-                                <i class="fas fa-signal-1 me-1"></i> Iniciante
-                            @elseif($track->difficulty === 'intermediate')
-                                <i class="fas fa-signal-2 me-1"></i> Intermediário
-                            @elseif($track->difficulty === 'advanced')
-                                <i class="fas fa-signal-3 me-1"></i> Avançado
-                            @endif
-                        </span>
-
-                        <!-- Exibir as tags -->
-                        @if(isset($tags) && count($tags) > 0)
-                            @foreach($tags as $tag)
-                                <span class="badge rounded-pill px-3 py-1" style="background-color: #EDF2F4; color: {{ $track->plan_color ?? '#2C5364' }}; transition: all 0.3s ease;">{{ $tag->name }}</span>
                             @endforeach
-                        @endif
-                    </div>
+                        </div>
+                    @endif
+                    <!-- Fim da seção de badges -->
 
                     <!-- Botão de play verde circular com ícone play -->
                     <button
