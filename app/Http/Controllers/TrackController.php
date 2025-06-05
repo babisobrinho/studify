@@ -67,9 +67,11 @@ class TrackController extends Controller
         $track->plan_color = $request->input('plan_color', '#06d6a0');
 
         // Processar upload da imagem
-        if ($request->hasFile('cover_image')) {
-            $path = $request->file('cover_image')->store('tracks/covers', 'public');
-            $track->cover_image = $path;
+        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+            $image = $request->file('cover_image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('storage/tracks/covers'), $imageName);
+            $track->cover_image = 'tracks/covers/' . $imageName;
         }
 
         $track->save();
@@ -124,12 +126,27 @@ class TrackController extends Controller
             ->orderBy('position')
             ->get();
 
-        // Carregar as tags associadas a este track
-        $tags = DB::table('track_tags')
+        // Carregar as tags associadas a este track (com filtro rigoroso)
+        $tagsQuery = DB::table('track_tags')
             ->join('tags', 'track_tags.tag_id', '=', 'tags.id')
             ->where('track_tags.track_id', $track->id)
-            ->select('tags.*')
-            ->get();
+            ->select('tags.*');
+
+// Obter os resultados como array para manipulação
+        $tagsArray = $tagsQuery->get()->toArray();
+
+// Filtrar manualmente para remover qualquer tag com nome vazio ou nulo
+        $filteredTags = [];
+        foreach ($tagsArray as $tag) {
+            if (isset($tag->name) && !empty($tag->name) && trim($tag->name) !== '') {
+                $filteredTags[] = $tag;
+            }
+        }
+
+// Converter de volta para collection
+        $tags = collect($filteredTags);
+
+
 
         // Carregar a categoria do track
         $category = null;
@@ -200,6 +217,7 @@ class TrackController extends Controller
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
             'plan_color' => 'nullable|string|max:7',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adicionada validação para o campo cover_image
         ]);
 
         // Atualizar o track
@@ -210,6 +228,15 @@ class TrackController extends Controller
         $track->difficulty = $validated['difficulty'];
         $track->category_id = $validated['category_id']; // Adicionada atribuição do campo category_id
         $track->plan_color = $request->input('plan_color', $track->plan_color ?? '#06d6a0');
+
+        // Processar upload da imagem (se houver)
+        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+            $image = $request->file('cover_image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('storage/tracks/covers'), $imageName);
+            $track->cover_image = 'tracks/covers/' . $imageName;
+        }
+
         $track->save();
 
         // Atualizar as tecnologias selecionadas
