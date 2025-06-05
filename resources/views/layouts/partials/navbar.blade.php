@@ -2,7 +2,8 @@
     <div class="container">
         <!-- Brand -->
         <a class="navbar-brand fw-bold" href="#">
-            <span class="text-primary">&lt;</span>Studify<span class="text-primary">/&gt;</span>
+            <img src="{{ asset('logo_black.png') }}" alt="Logo Sudify" class="d-none d-md-block" style="width: 150px;">
+            <img src="{{ asset('logo_square.png') }}" alt="Logo Sudify" class="d-md-none" style="width: 25px;">
         </a>
         
         <!-- Desktop content (shown on lg and up) -->
@@ -52,14 +53,13 @@
                             <li class="dropdown-item p-3">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
-                                        <div class="position-relative d-flex align-items-center rounded-circle p-2 bg-primary">
-                                            <div class="position-absolute rounded-circle top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.25); z-index: 1;"></div>
-                                            <iconify-icon icon="solar:chat-round-unread-bold-duotone" width="24" class="positivion-relative text-white" style="z-index: 2;"></iconify-icon>
+                                        <div class="d-flex align-items-center rounded-circle p-2 bg-primary bg-opacity-25">
+                                            <iconify-icon icon="solar:chat-round-bold" width="24" class="text-primary"></iconify-icon>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1 text-wrap">
-                                        <h6 class="mb-1">Nova mensagem</h6>
-                                        <p class="mb-0 small text-muted">Você recebeu uma nova mensagem do professor</p>
+                                        <h6 class="mb-1">Novo comentário</h6>
+                                        <p class="mb-0 small text-muted">Antónia Silva respondeu o seu comentário</p>
                                         <small class="text-muted">2 minutos atrás</small>
                                     </div>
                                 </div>
@@ -67,14 +67,13 @@
                             <li class="dropdown-item p-3">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
-                                        <div class="position-relative d-flex align-items-center rounded-circle p-2 bg-success">
-                                            <div class="position-absolute rounded-circle top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.25); z-index: 1;"></div>
-                                            <iconify-icon icon="solar:document-text-bold-duotone" width="24" class="positivion-relative text-white" style="z-index: 2;"></iconify-icon>
+                                        <div class="d-flex align-items-center rounded-circle p-2 bg-warning bg-opacity-25">
+                                            <iconify-icon icon="solar:star-bold" width="24" class="text-warning"></iconify-icon>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1 text-wrap">
-                                        <h6 class="mb-1">Tarefa avaliada</h6>
-                                        <p class="mb-0 small text-muted">Sua tarefa de Matemática foi corrigida</p>
+                                        <h6 class="mb-1">Trilha avaliada</h6>
+                                        <p class="mb-0 small text-muted">José Gomes avaliou a sua trilha "PHP para Iniciantes"</p>
                                         <small class="text-muted">1 hora atrás</small>
                                     </div>
                                 </div>
@@ -82,14 +81,13 @@
                             <li class="dropdown-item p-3">
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
-                                        <div class="position-relative d-flex align-items-center rounded-circle p-2 bg-warning">
-                                            <div class="position-absolute rounded-circle top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.25); z-index: 1;"></div>
-                                            <iconify-icon icon="solar:calendar-mark-bold-duotone" width="24" class="positivion-relative text-white" style="z-index: 2;"></iconify-icon>
+                                        <div class="d-flex align-items-center rounded-circle p-2 bg-info bg-opacity-25">
+                                            <iconify-icon icon="solar:calendar-mark-bold" width="24" class="text-info"></iconify-icon>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1 text-wrap">
                                         <h6 class="mb-1">Evento amanhã</h6>
-                                        <p class="mb-0 small text-muted">Prova de História marcada para amanhã</p>
+                                        <p class="mb-0 small text-muted">Estás incrito no evento "Tech Talks" que será amanhã às 14h</p>
                                         <small class="text-muted">Ontem</small>
                                     </div>
                                 </div>
@@ -145,9 +143,7 @@
         <!-- Mobile offcanvas menu -->
         <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="mobileMenu" data-bs-scroll="false" data-bs-backdrop="true">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title fw-bold">
-                    <span class="text-primary">&lt;</span>Studify<span class="text-primary">/&gt;</span>
-                </h5>
+                <img src="{{ asset('logo_black.png') }}" alt="Logo Sudify" style="height: 30px;">
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body">

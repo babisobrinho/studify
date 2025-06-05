@@ -31,3 +31,12 @@
 .bg-blue {
     background-color: #203A43;
 }
+
+table th,
+table td,
+table tr,
+table thead,
+table tbody {
+    border: 0 !important;
+    background-color: #fff !important;
+}

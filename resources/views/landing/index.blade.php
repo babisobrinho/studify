@@ -169,11 +169,9 @@
                 </a>
                 </div>
                 <div class="row d-flex flex-column align-items-center">
-                    <div class="col-12 mb-3">
-                        <h1 class="fw-bold text-center text-white mb-4" style="font-size: 65px;">
-                            Transforme a sua<br>
-                            <span class="text-dark">carreira tech</span>
-                        </h1>
+                    <div class="col-12 mb-3 text-center">
+                        <img src="{{ asset('logo_white.png') }}" alt="Logo Studify" class="img-fluid">
+                        <h2 class="fw-semibold fs-3 text-center">Estuda sem limites!</h2>
                     </div>
                 </div>
             </div>

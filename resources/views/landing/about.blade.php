@@ -366,7 +366,7 @@
             </div>
         </div>
     </div>
-    <div class="w-100 p-5" style="background: linear-gradient(135deg, rgb(32, 58, 67) 0%, rgb(18, 155, 119) 50%, rgb(32, 58, 67) 100%">
+    <div class="w-100 p-5" style="background: linear-gradient(135deg, rgb(32, 58, 67) 0%, rgb(18, 155, 119) 50%, rgb(32, 58, 67) 100%)">
         <div class="p-3 d-flex flex-column align-items-center py-5">
             <h2 class="text-center mb-4 mb-md-5 fw-bold text-white">O nosso impacto</h2>
             <div class="container row g-2 g-md-4">
