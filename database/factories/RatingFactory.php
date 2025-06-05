@@ -21,7 +21,7 @@ class RatingFactory extends Factory
         return [
             'user_id' => User::factory(),
             'track_id' => Track::factory(),
-            'rating' => $this->faker->numberBetween(1, 5),
+            'rating' => 5,
             'review' => $this->faker->optional(0.7)->paragraph(), // 70% chance de ter review
         ];
     }

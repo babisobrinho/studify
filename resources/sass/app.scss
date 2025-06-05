@@ -6,3 +6,37 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+*:focus {
+    box-shadow: none !important;
+}
+
+.text-hover-primary {
+    transition: $transition-base;
+
+    &:hover {
+        color: $primary !important;
+    }
+}
+
+.bg-hover-dark {
+    transition: $transition-base;
+
+    &:hover {
+        background-color: $dark !important;
+        color: $white !important;
+    }
+}
+
+.bg-blue {
+    background-color: #203A43;
+}
+
+table th,
+table td,
+table tr,
+table thead,
+table tbody {
+    border: 0 !important;
+    background-color: #fff !important;
+}

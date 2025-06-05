@@ -24,9 +24,9 @@ $verde-agua:         #06D6A0;
 $cinza-claro:        #EDF2F4;
 
 // Accent Colors
-$ciano-vivo:         #5DDAF8;
-$verde-neon:         #4FFF7B;
-$rosa-eletrico:      #F72585;
+$ciano-vivo:         #4BAEC6;
+$verde-neon:         #00CD33;
+$rosa-eletrico:      #F64FA9;
 $laranja:            #F8961E;
 
 // Neutral Colors
@@ -42,12 +42,12 @@ $warning:       $laranja;
 $danger:        $rosa-eletrico;
 $light:         $cinza-claro;
 $dark:          $petroleo-escuro;
-
-// Cores adicionais da paleta
 $blue:          $azul-medio;
 $teal:          $petroleo-escuro;
 $cyan:          $ciano-vivo;
 $pink:          $rosa-eletrico;
+// Cores adicionais da paleta
+
 
 // Gradação de cinzas
 $gray-100: #f8f9fa;
@@ -62,7 +62,7 @@ $gray-900: #0F2027; // Usando Petróleo Escuro
 
 // Body
 $body-bg:                   $cinza-claro;
-$body-color:                $azul-esverdeado;
+$body-color:                $azul-medio;
 
 // Dark Mode
 $body-dark-bg:              #22282e;
@@ -99,11 +99,28 @@ $card-box-shadow:           0px 3px 4px rgba($petroleo-escuro, 0.03);
     --#{$prefix}body-color: #aab8c5;
     --#{$prefix}border-color: #2f3944;
     --#{$prefix}headings-color: #dee2e6;
-    
+
+
     // Cards
     --#{$prefix}card-bg: #282f36;
     --#{$prefix}card-border-color: #36404a;
 }
+// Adicionar transições globais
+$transition-base: all 0.3s ease-in-out;
+
+// Customizar variáveis de botão
+$btn-border-width: 2px;
+
+@keyframes slide-up {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.6s ease-out;
+}
+$studify-gradient: linear-gradient(135deg, $azul-esverdeado 0%, $petroleo-escuro 100%);
+$studify-cta-bg: linear-gradient(45deg, $verde-agua 0%, $ciano-vivo 100%);
 
 // Componentes específicos STUDIFY
 $topbar-height:             100px;

@@ -87,7 +87,6 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-
         // Atribui tags aos tracks
         $tracks->each(function ($track) use ($tags) {
             $track->tags()->attach(
@@ -184,23 +183,24 @@ class DatabaseSeeder extends Seeder
         }
 
         // Cria ratings
-        $ratingsGiven = [];
-        while (count($ratingsGiven) < 5) {
-            $userId = $users->random()->id;
-            $trackId = $tracks->random()->id;
-            $key = "$userId-$trackId";
+        $userIds = $users->pluck('id');
+        $trackIds = $tracks->pluck('id');
 
-            if (!isset($ratingsGiven[$key])) {
-                Rating::create([
-                    'user_id' => $userId,
-                    'track_id' => $trackId,
-                    'rating' => rand(1, 5),
-                    'review' => fake()->sentence(10),
-                    'created_at' => now()->subDays(rand(1, 60)),
-                ]);
-                $ratingsGiven[$key] = true;
-            }
-        }
+        // Create all combinations of user-track pairs (Cartesian product)
+        $pairs = $userIds->crossJoin($trackIds);
+
+        // Iterate over each pair and create the rating
+        $pairs->each(function ($pair) {
+            [$userId, $trackId] = $pair;
+
+            Rating::create([
+                'user_id' => $userId,
+                'track_id' => $trackId,
+                'rating' => 5,
+                'review' => fake()->sentence(10),
+                'created_at' => now()->subDays(rand(1, 60)),
+            ]);
+        });
 
         // Cria follows entre usuários
         $users = User::all();
