@@ -18,7 +18,21 @@ Route::middleware('auth')->group(function () {
     Route::controller(HomeController::class)->group(function () {
         Route::get('/home', 'index')->name('index');
     });
-    Route::controller(TrackController::class)->prefix('{username}/tracks')->name('tracks.')->group(function () {
-        //
+    
+    Route::controller(TrackController::class)->name('tracks.')->group(function () {
+        // Community routes
+        Route::prefix('{username}/tracks')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{id}', 'show')->name('show');
+            Route::get('/{id}/edit', 'edit')->name('edit');
+            Route::patch('/{id}', 'update')->name('update');
+            Route::delete('/{id}', 'destroy')->name('destroy');
+            
+            // Rating route
+            Route::post('/{track}/rate', 'rate')->name('rate');
+            Route::post('/{track}/comment', 'comment')->name('comment');
+        });
     });
 });

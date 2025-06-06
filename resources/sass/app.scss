@@ -40,3 +40,14 @@ table tbody {
     border: 0 !important;
     background-color: #fff !important;
 }
+
+.rating-icon {
+    color: #ccc;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.text-warning {
+    color: $warning !important;
+}

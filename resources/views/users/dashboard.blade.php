@@ -353,7 +353,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary w-100 py-2 rounded-3">
+                        <button class="btn btn-primary text-white fs-semibold w-100 py-2 rounded-3">
                             Pesquisar
                         </button>
                     </div>
@@ -491,7 +491,7 @@
                                         <iconify-icon icon="solar:play-bold" class="text-white" style="font-size: 12px;" ></iconify-icon>
                                     </button>
                                     <button class="btn btn-sm d-flex align-items-center justify-content-center me-1" style="width: 24px; height: 24px;">
-                                        <iconify-icon icon="solar:document-add-bold-duotone" class="text-secondary" style="font-size: 24px;"></iconify-icon>
+                                        <iconify-icon icon="solar:notebook-bold-duotone" class="text-secondary" style="font-size: 24px;"></iconify-icon>
                                     </button>
                                     <button class="btn btn-sm d-flex align-items-center justify-content-center me-1" style="width: 24px; height: 24px;">
                                         <iconify-icon icon="solar:chat-round-bold" class="text-secondary" style="font-size: 24px;"></iconify-icon>
@@ -987,7 +987,7 @@
                 </div>
 
                 <div class="mt-2 d-flex align-items-center justify-content-center">
-                    <a href="#" class="btn btn-primary text-dark rounded-pill mt-4 px-4">Ver toda a comunidade</a>
+                    <a href="#" class="btn btn-primary text-white fw-semibold rounded-pill mt-4 px-4">Ver toda a comunidade</a>
                 </div>
             </div>
 

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-md-4 py-3">
     <div class="container">
         <!-- Brand -->
-        <a class="navbar-brand fw-bold" href="#">
+        <a class="navbar-brand fw-bold" href="{{ route('index') }}">
             <img src="{{ asset('logo_black.png') }}" alt="Logo Sudify" class="d-none d-md-block" style="width: 150px;">
             <img src="{{ asset('logo_square.png') }}" alt="Logo Sudify" class="d-md-none" style="width: 25px;">
         </a>
@@ -109,9 +109,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <iconify-icon icon="solar:notebook-bold-duotone" class="text-secondary me-2" width="20"></iconify-icon>
-                                    Planos
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('tracks.index', auth()->user()->username) }}">
+                                    <iconify-icon icon="solar:clipboard-list-bold-duotone" class="text-secondary me-2" width="20"></iconify-icon>
+                                    Trilhas
                                 </a>
                             </li>
                             <li>
@@ -173,7 +173,7 @@
                         </li>
                         <li class="nav-item mb-3">
                             <a class="nav-link p-0" href="#">
-                                Os nossos planos
+                                As nosas trilhas
                             </a>
                         </li>
                         <li class="nav-item">
@@ -196,7 +196,7 @@
                         </li>
                         <li class="nav-item mb-1">
                             <a class="nav-link d-flex align-items-center" href="#">
-                                <iconify-icon icon="solar:notebook-bold-duotone" class="text-secondary me-2" width="20"></iconify-icon> Planos
+                                <iconify-icon icon="solar:clipboard-list-bold-duotone" class="text-secondary me-2" width="20"></iconify-icon> Trilhas
                             </a>
                         </li>
                         <li class="nav-item mb-1">

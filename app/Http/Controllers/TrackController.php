@@ -6,8 +6,11 @@ use App\Models\Track;
 use App\Models\User;
 use App\Models\Step;
 use App\Models\Tag;
+use App\Models\Rating;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class TrackController extends Controller
@@ -20,7 +23,7 @@ class TrackController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         $tracks = Track::where('user_id', $user->id)->get();
 
-        return view('users.tracks.index', compact('user', 'tracks'));
+        return view('tracks.index', compact('user', 'tracks'));
     }
 
     /**
@@ -33,7 +36,7 @@ class TrackController extends Controller
         // Buscar todas as tags disponíveis para exibir no formulário
         $availableTags = Tag::all();
 
-        return view('users.tracks.create', compact('user', 'availableTags'));
+        return view('tracks.create', compact('user', 'availableTags'));
     }
 
     /**
@@ -48,7 +51,7 @@ class TrackController extends Controller
             'description' => 'nullable|string',
             'is_public' => 'boolean',
             'difficulty' => 'required|string|in:beginner,intermediate,advanced',
-            'category_id' => 'required|exists:categories,id', // Adicionada validação para o campo category_id
+            'category_id' => 'required|exists:category,id', // Adicionada validação para o campo category_id
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -121,52 +124,46 @@ class TrackController extends Controller
         $user = User::where('username', $username)->firstOrFail();
         $track = Track::where('id', $id)->firstOrFail();
 
-        // Carregar os steps associados a este track, ordenados por position
-        $steps = Step::where('track_id', $track->id)
-            ->orderBy('position')
-            ->get();
+        // Carrega os relacionamentos normais
+        $track->load([
+            'steps' => function($query) {
+                $query->orderBy('position');
+            },
+            'tags',
+            'category'
+        ]);
 
-        // Carregar as tags associadas a este track (com filtro rigoroso)
-        $tagsQuery = DB::table('track_tags')
-            ->join('tags', 'track_tags.tag_id', '=', 'tags.id')
-            ->where('track_tags.track_id', $track->id)
-            ->select('tags.*');
+        // Obter os steps separadamente para usar na view
+        $steps = $track->steps()->orderBy('position')->get();
 
-// Obter os resultados como array para manipulação
-        $tagsArray = $tagsQuery->get()->toArray();
+        // Restante do código permanece igual...
+        $ratings = $track->ratings()
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
 
-// Filtrar manualmente para remover qualquer tag com nome vazio ou nulo
-        $filteredTags = [];
-        foreach ($tagsArray as $tag) {
-            if (isset($tag->name) && !empty($tag->name) && trim($tag->name) !== '') {
-                $filteredTags[] = $tag;
-            }
+        $avgRating = $track->average_rating;
+        $ratingsCount = $track->ratings->count();
+        
+        $ratingDistribution = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $ratingDistribution[$i] = $track->ratings->where('rating', $i)->count();
         }
 
-// Converter de volta para collection
-        $tags = collect($filteredTags);
+        $userHasRated = auth()->check() 
+            ? $track->ratings->contains('user_id', auth()->id())
+            : false;
 
-
-
-        // Carregar a categoria do track
-        $category = null;
-        if ($track->category_id) {
-            $category = DB::table('categories')->where('id', $track->category_id)->first();
-        }
-
-        // Carregar estatísticas do track (likes, visualizações)
-        $likesCount = DB::table('likes')
-            ->where('track_id', $track->id)
-            ->count();
-
-        // Carregar avaliações do track
-        $ratings = DB::table('ratings')
-            ->where('track_id', $track->id)
-            ->get();
-
-        $avgRating = $ratings->avg('rating') ?? 0;
-
-        return view('users.tracks.show', compact('user', 'track', 'steps', 'tags', 'category', 'likesCount', 'avgRating'));
+        return view('tracks.show', compact(
+            'user',
+            'track',
+            'steps', // Adicione esta linha
+            'ratings',
+            'avgRating',
+            'ratingsCount',
+            'ratingDistribution',
+            'userHasRated'
+        ));
     }
 
     /**
@@ -191,7 +188,7 @@ class TrackController extends Controller
             ->orderBy('position')
             ->get();
 
-        return view('users.tracks.edit', compact('user', 'track', 'trackTags', 'steps', 'availableTags'));
+        return view('tracks.edit', compact('user', 'track', 'trackTags', 'steps', 'availableTags'));
     }
 
     /**
@@ -213,7 +210,7 @@ class TrackController extends Controller
             'description' => 'nullable|string',
             'is_public' => 'boolean',
             'difficulty' => 'required|string|in:beginner,intermediate,advanced',
-            'category_id' => 'required|exists:categories,id', // Adicionada validação para o campo category_id
+            'category_id' => 'required|exists:category,id', // Adicionada validação para o campo category_id
             'technologies' => 'nullable|array',
             'steps' => 'nullable|array',
             'plan_color' => 'nullable|string|max:7',
@@ -308,5 +305,43 @@ class TrackController extends Controller
 
         return redirect()->route('tracks.index', ['username' => $username])
             ->with('success', 'Plano de estudos excluído com sucesso!');
+    }
+
+    public function rate(Request $request, string $username, Track $track)
+    {
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'review' => 'nullable|string|max:500',
+        ]);
+
+        // Check if user already rated this track
+        if ($track->ratings()->where('user_id', auth()->id())->exists()) {
+            return back()->with('error', 'Você já avaliou esta trilha.');
+        }
+
+        // Create new rating
+        Rating::create([
+            'user_id' => auth()->id(),
+            'track_id' => $track->id,
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
+
+        return back()->with('success', 'Avaliação enviada com sucesso!');
+    }
+
+    public function comment(Request $request, string $username, Track $track) {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $comment = new Comment();
+        $comment->user_id = Auth::id();
+        $comment->track_id = $track->id;
+        $comment->content = $request->input('comment');
+        $comment->save();
+
+        return redirect()->back()
+            ->with('success', 'Comentário adicionado com sucesso!');
     }
 }

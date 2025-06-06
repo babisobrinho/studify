@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title', 100);
             $table->string('slug', 120)->unique();
             $table->text('description')->nullable();
-            $table->string('plan_color', 7)->default('#06d6a0');
+            $table->string('plan_color', 7)->default('primary');
             $table->boolean('is_official')->default(false);
             $table->boolean('is_public')->default(true);
             $table->enum('difficulty', DifficultyEnum::values())->default(DifficultyEnum::BEGINNER->value);
