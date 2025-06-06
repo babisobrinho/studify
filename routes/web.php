@@ -4,6 +4,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TrackController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Auth::routes();
 
@@ -36,3 +37,5 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
+
+Route::get('/{username}', [App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
