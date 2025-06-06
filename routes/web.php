@@ -19,6 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::controller(HomeController::class)->group(function () {
         Route::get('/home', 'index')->name('index');
     });
+
+    Route::get('/{username}', [App\Http\Controllers\UserController::class, 'profile'])->name('users.profile');
     
     Route::controller(TrackController::class)->name('tracks.')->group(function () {
         // Community routes
@@ -37,5 +39,3 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
-
-Route::get('/{username}', [App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');

@@ -103,7 +103,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end bg-white">
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('users.profile', auth()->user()->username) }}">
                                     <iconify-icon icon="solar:user-rounded-bold-duotone" class="text-secondary me-2" width="20"></iconify-icon>
                                     Perfil
                                 </a>
